@@ -16,7 +16,7 @@ public class Task extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "title", nullable = false, length = 255)
+  @Column(name = "title", nullable = false)
   private String title;
 
   @Column(name = "description", nullable = false, length = 512)
@@ -30,6 +30,7 @@ public class Task extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private TaskStatus status;
 
-  @Column(name = "user_id", nullable = false)
-  private Long userId;
+  @ManyToOne
+  @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+  private User user;
 }

@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -15,12 +18,15 @@ public class User extends BaseEntity {
   @Column(name = "id", nullable = false)
   private Long id;
 
-  @Column(name = "fullname", nullable = false, length = 255)
+  @Column(name = "fullname", nullable = false)
   private String fullname;
 
-  @Column(name = "email", nullable = false, unique = true, length = 255)
+  @Column(name = "email", nullable = false, unique = true)
   private String email;
 
-  @Column(name = "password", nullable = false, length = 255)
+  @Column(name = "password", nullable = false)
   private String password;
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Task> tasks = new ArrayList<>();
 }
