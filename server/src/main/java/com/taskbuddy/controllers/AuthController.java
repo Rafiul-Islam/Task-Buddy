@@ -1,8 +1,6 @@
 package com.taskbuddy.controllers;
 
-import com.taskbuddy.dtos.auth.LoginRequest;
-import com.taskbuddy.dtos.auth.LoginResponse;
-import com.taskbuddy.dtos.auth.RegistrationRequest;
+import com.taskbuddy.dtos.auth.*;
 import com.taskbuddy.dtos.common.ApiResponse;
 import com.taskbuddy.payload.ApiResponseBuilder;
 import com.taskbuddy.services.AuthService;
@@ -37,6 +35,13 @@ public class AuthController {
   public ResponseEntity<ApiResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest request) {
     LoginResponse response = authService.login(request);
     return ApiResponseBuilder.success(HttpStatus.OK, "Successfully Logged in", response);
+  }
+
+  @PostMapping("/refresh")
+  @Operation(summary = "Refresh a user's access token")
+  public ResponseEntity<ApiResponse<RefreshTokenResponse>> refresh(@RequestBody RefreshTokenRequest request) {
+    var accessToken = authService.refresh(request);
+    return ApiResponseBuilder.success(HttpStatus.OK, "New accessToken", new RefreshTokenResponse(accessToken));
   }
 
 }

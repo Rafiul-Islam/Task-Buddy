@@ -2,6 +2,7 @@ package com.taskbuddy.services;
 
 import com.taskbuddy.dtos.auth.LoginRequest;
 import com.taskbuddy.dtos.auth.LoginResponse;
+import com.taskbuddy.dtos.auth.RefreshTokenRequest;
 import com.taskbuddy.dtos.auth.RegistrationRequest;
 import com.taskbuddy.entities.User;
 import com.taskbuddy.exeptions.NotFoundException;
@@ -10,6 +11,7 @@ import com.taskbuddy.repositories.UserRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
@@ -45,5 +47,17 @@ public class AuthService {
     response.setAccessToken(accessToken);
     response.setRefreshToken(refreshToken);
     return response;
+  }
+
+  public String refresh(RefreshTokenRequest request) {
+    var jwt = jwtService.parseToken(request.getRefreshToken());
+
+    if (jwt == null || !jwt.isExpired()) throw new BadCredentialsException("Invalid refresh token");
+
+
+    var userId = jwt.getUserId();
+    var user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
+
+    return jwtService.generateAccessToken(user).toString();
   }
 }
