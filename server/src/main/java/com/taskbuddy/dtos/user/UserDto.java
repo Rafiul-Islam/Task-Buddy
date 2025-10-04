@@ -1,4 +1,4 @@
-package com.taskbuddy.dtos;
+package com.taskbuddy.dtos.user;
 
 import lombok.Data;
 

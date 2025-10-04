@@ -1,6 +1,6 @@
 package com.taskbuddy.exeptions;
 
-import com.taskbuddy.dtos.ApiResponse;
+import com.taskbuddy.dtos.common.ApiResponse;
 import com.taskbuddy.payload.ApiResponseBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

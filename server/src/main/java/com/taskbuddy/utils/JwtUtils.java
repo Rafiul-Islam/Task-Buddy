@@ -1,6 +1,6 @@
 package com.taskbuddy.utils;
 
-import com.taskbuddy.dtos.UserDto;
+import com.taskbuddy.dtos.user.UserDto;
 import com.taskbuddy.services.Jwt;
 import com.taskbuddy.services.JwtService;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,7 +1,7 @@
 package com.taskbuddy.payload;
 
 
-import com.taskbuddy.dtos.ApiResponse;
+import com.taskbuddy.dtos.common.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
