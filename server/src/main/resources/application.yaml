@@ -10,6 +10,10 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  jwt:
+    secret: ${JWT_SECRET}
+    accessTokenExpirationTime: 1800000       # 30 minutes
+    refreshTokenExpirationTime: 1296000000    # 15 days
 
 server:
   port: 8081
