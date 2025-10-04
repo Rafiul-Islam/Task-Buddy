@@ -1,5 +1,7 @@
 package com.taskbuddy.controllers;
 
+import com.taskbuddy.dtos.auth.LoginRequest;
+import com.taskbuddy.dtos.auth.LoginResponse;
 import com.taskbuddy.dtos.auth.RegistrationRequest;
 import com.taskbuddy.dtos.common.ApiResponse;
 import com.taskbuddy.payload.ApiResponseBuilder;
@@ -28,6 +30,13 @@ public class AuthController {
   public ResponseEntity<ApiResponse<Void>> register(@RequestBody @Valid RegistrationRequest request) {
     authService.register(request);
     return ApiResponseBuilder.success(HttpStatus.CREATED, "User registered successfully", null);
+  }
+
+  @PostMapping("/login")
+  @Operation(summary = "Login a user")
+  public ResponseEntity<ApiResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest request) {
+    LoginResponse response = authService.login(request);
+    return ApiResponseBuilder.success(HttpStatus.OK, "Successfully Logged in", response);
   }
 
 }
