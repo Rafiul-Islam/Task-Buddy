@@ -30,7 +30,7 @@ public class Task extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private TaskStatus status;
 
-  @ManyToOne
-  @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id")
   private User user;
 }

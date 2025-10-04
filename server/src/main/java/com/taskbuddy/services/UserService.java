@@ -38,6 +38,10 @@ public class UserService {
     return userRepository.save(userEntity);
   }
 
+  public User save(User user) {
+    return userRepository.save(user);
+  }
+
   public User update(Long id, UserUpdateRequest request) {
     validateAuthorization(id);
     User existingUser = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
@@ -58,5 +62,9 @@ public class UserService {
       throw new IllegalArgumentException("Old password is incorrect");
     existingUser.setPassword(passwordEncoder.encode(request.getNewPassword()));
     userRepository.save(existingUser);
+  }
+
+  public User getUserById(Long userId) {
+    return userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
   }
 }
