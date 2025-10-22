@@ -118,3 +118,102 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Hide number input arrows */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.form-group {
+  @apply w-full mb-5;
+}
+
+.form-label {
+  @apply text-sm text-gray-600;
+}
+
+.form-input {
+  @apply w-full py-[22px] px-4 input border border-gray-300 focus:border-green-700 focus:outline-none text-gray-900;
+}
+
+/* Enhanced Button Styles */
+.btn-green {
+  @apply cursor-pointer bg-gradient-to-r from-green-600 to-green-700 py-2.5 px-4 pt-[calc(0.625rem+2px)] rounded-[3px] hover:from-green-700 hover:to-green-800 duration-300 text-white font-semibold uppercase leading-none text-xs flex items-center justify-center shadow-sm hover:shadow-md hover:shadow-green-500/25 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none disabled:hover:scale-100;
+}
+
+.btn-slate {
+  @apply cursor-pointer bg-gradient-to-r from-slate-500 to-slate-600 py-2.5 px-4 pt-[calc(0.625rem+2px)] rounded-[3px] hover:from-slate-600 hover:to-slate-700 duration-300 text-white font-semibold uppercase leading-none text-xs flex items-center justify-center shadow-sm hover:shadow-md hover:shadow-slate-500/25 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none disabled:hover:scale-100;
+}
+
+/* Additional Beautiful Button Variants */
+.btn-primary {
+  @apply cursor-pointer bg-gradient-to-r from-blue-600 to-blue-700 py-2.5 px-4 pt-[calc(0.625rem+2px)] rounded-[3px] hover:from-blue-700 hover:to-blue-800 duration-300 text-white font-semibold uppercase leading-none text-xs flex items-center justify-center shadow-sm hover:shadow-md hover:shadow-blue-500/25 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none disabled:hover:scale-100;
+}
+
+.btn-danger {
+  @apply cursor-pointer bg-gradient-to-r from-red-600 to-red-700 py-2.5 px-4 pt-[calc(0.625rem+2px)] rounded-[3px] hover:from-red-700 hover:to-red-800 duration-300 text-white font-semibold uppercase leading-none text-xs flex items-center justify-center shadow-sm hover:shadow-md hover:shadow-red-500/25 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none disabled:hover:scale-100;
+}
+
+.btn-warning {
+  @apply cursor-pointer bg-gradient-to-r from-yellow-400 to-yellow-500 py-2.5 px-4 pt-[calc(0.625rem+2px)] rounded-[3px] hover:from-yellow-500 hover:to-yellow-600 duration-300 text-black font-semibold uppercase leading-none text-xs flex items-center justify-center shadow-sm hover:shadow-md hover:shadow-yellow-400/25 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none disabled:hover:scale-100;
+}
+
+.btn-outline {
+  @apply cursor-pointer border-2 border-gray-300 bg-transparent py-2.5 px-4 pt-[calc(0.625rem+2px)] rounded-[3px] hover:bg-gray-50 hover:border-gray-400 duration-300 text-gray-700 font-semibold uppercase leading-none text-xs flex items-center justify-center shadow-sm hover:shadow-md hover:shadow-gray-200/25 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none disabled:hover:scale-100;
+}
+
+.btn-ghost {
+  @apply cursor-pointer bg-transparent py-2.5 px-4 pt-[calc(0.625rem+2px)] rounded-[3px] hover:bg-gray-100 duration-300 text-gray-700 font-semibold uppercase leading-none text-xs flex items-center justify-center shadow-none hover:shadow-sm transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none disabled:hover:scale-100;
+}
+
+/* Button Size Variants */
+.btn-xs {
+  @apply h-7 px-2 text-xs;
+}
+
+.btn-sm {
+  @apply h-8 px-3 text-sm;
+}
+
+.btn-lg {
+  @apply h-12 px-6 text-base;
+}
+
+.btn-xl {
+  @apply h-14 px-8 text-lg;
+}
+
+/* Button Block */
+.btn-block {
+  @apply w-full;
+}
+
+/* Ripple Effect */
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-ripple::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn-ripple:active::before {
+  width: 300px;
+  height: 300px;
+}

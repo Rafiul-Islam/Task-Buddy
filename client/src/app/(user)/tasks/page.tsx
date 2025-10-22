@@ -1,11 +1,11 @@
 import React from 'react';
-import TaskTable from "@/app/(user)/tasks/TaskTable";
+import {TaskView} from "@/app/(user)/tasks/components/TaskView";
 
 const Tasks = () => {
   return (
     <div>
       Tasks Page
-      <TaskTable/>
+      <TaskView/>
     </div>
   );
 };
