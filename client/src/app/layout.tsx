@@ -2,9 +2,10 @@ import type {Metadata} from "next";
 import {Open_Sans} from "next/font/google";
 import {PropsWithChildren} from "react";
 import "./globals.css";
-import AuthProvider from "@/app/(auth)/Provider";
+import AuthProvider from "@/components/providers/AuthProvider";
 import SessionGuard from "@/app/(auth)/SessionGuard";
 import {ToastContainer} from "react-toastify";
+import QueryProvider from "@/components/providers/QueryProvider";
 
 const openSans = Open_Sans({
   subsets: ["latin"],
@@ -20,23 +21,25 @@ export default function RootLayout({children}: PropsWithChildren) {
   return (
     <html lang="en">
     <body className={`${openSans.className}`}>
-    <AuthProvider>
-      <SessionGuard>
-        <main>{children}</main>
-      </SessionGuard>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-      />
-    </AuthProvider>
+    <QueryProvider>
+      <AuthProvider>
+        <SessionGuard>
+          <main>{children}</main>
+        </SessionGuard>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
+      </AuthProvider>
+    </QueryProvider>
     </body>
     </html>
   );
