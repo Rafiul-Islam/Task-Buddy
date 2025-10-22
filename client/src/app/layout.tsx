@@ -34,7 +34,7 @@ export default function RootLayout({children}: PropsWithChildren) {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="light"
+        theme="colored"
       />
     </AuthProvider>
     </body>
