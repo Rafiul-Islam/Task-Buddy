@@ -17,7 +17,7 @@ public class OpenAPIConfig {
 
     return new OpenAPI()
       .info(new Info()
-        .title("My API")
+        .title("Task Buddy API")
         .version("v1")
         .description("Spring Boot API with JWT security"))
       .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))

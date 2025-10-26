@@ -45,7 +45,7 @@ public class UserService {
   public User update(Long id, UserUpdateRequest request) {
     validateAuthorization(id);
     User existingUser = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
-    existingUser.setFullname(request.getName());
+    existingUser.setFullname(request.getFullname());
     return userRepository.save(existingUser);
   }
 
