@@ -19,7 +19,8 @@ export async function middleware(request: NextRequest) {
   // If NOT logged in and tries to access protected routes → redirect to signin
   if (!token && (
     url.pathname.startsWith(USER_ROUTES.DASHBOARD) ||
-    url.pathname.startsWith(USER_ROUTES.PROFILE)
+    url.pathname.startsWith(USER_ROUTES.PROFILE) ||
+    url.pathname.startsWith(USER_ROUTES.TASKS)
   )) {
     return NextResponse.redirect(new URL(AUTH_ROUTES.SIGN_IN, request.url));
   }
@@ -33,12 +34,10 @@ export const config = {
   matcher: [
     "/",
     "/dashboard",
-    "/dashboard/:path*",
     "/profile",
-    "/profile/:path*",
+    "/tasks",
+    "/tasks/:path",
     "/signin",
-    "/signin/:path*",
     "/signup",
-    "/signup/:path*",
   ],
 };

@@ -139,7 +139,7 @@ input[type="number"] {
 }
 
 .form-input {
-  @apply w-full py-[22px] px-4 input border border-gray-300 focus:border-green-700 focus:outline-none text-gray-900;
+  @apply w-full py-[22px] px-4 border border-gray-300 focus:border-green-700 focus:outline-none text-gray-900;
 }
 
 /* Enhanced Button Styles */

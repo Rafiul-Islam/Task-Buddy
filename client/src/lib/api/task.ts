@@ -3,9 +3,9 @@ const ROOT = "/tasks";
 export const TASK = {
   GET: {
     ALL: `${ROOT}`,
-    DETAIL: `${ROOT}/:id`,
+    DETAILS: (id: number) => `${ROOT}/${id}`,
   },
   CREATE: `${ROOT}`,
-  UPDATE: `${ROOT}/:id`,
-  DELETE: `${ROOT}/:id`,
+  UPDATE: (id: number) => `${ROOT}/${id}`,
+  DELETE: (id: number) => `${ROOT}/${id}`,
 } as const;

@@ -15,7 +15,6 @@ export const AUTH_API_ENDPOINTS = {
   SIGN_IN: {
     CREDENTIALS: "/auth/login",
   },
-  SIGN_UP: "/shop-owner", // not used; registration via SHOP_OWNER.REGISTER
   REFRESH: "/auth/refresh",
 };
 

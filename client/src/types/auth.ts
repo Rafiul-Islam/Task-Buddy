@@ -20,12 +20,4 @@ export interface ApiResponseType<T> {
   payload: T;
 }
 
-export interface RefreshTokenResponse {
-  accessToken: string;
-  expiresIn: number;
-  refreshToken: string;
-  refreshExpiresIn: number;
-  tokenType: "Bearer";
-}
-
 export const ERROR_TYPE_TO_FORCE_LOGOUT = "RefreshAccessTokenError";
