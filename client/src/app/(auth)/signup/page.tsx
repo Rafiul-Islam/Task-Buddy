@@ -5,7 +5,7 @@ import {Card, CardContent, CardDescription, CardHeader, CardTitle,} from "@/comp
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {Eye, EyeOff, Lock, Mail, User, UserPlus2} from "lucide-react";
+import {Eye, EyeOff, Lock, Mail, User as UserIcon, UserPlus2} from "lucide-react";
 import {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import * as z from "zod";
@@ -18,8 +18,8 @@ import {AUTH_ROUTES} from "@/constants/auth";
 import Link from "next/link";
 import {useRouter} from "next/navigation";
 import {API} from "@/lib/api";
-import {ApiResponseType} from "@/types/auth";
-import {UserType} from "@/types/userType";
+import {ApiResponse} from "@/types/auth";
+import {User} from "@/types/user";
 
 type SignupFormData = z.infer<typeof signupSchema>;
 
@@ -41,7 +41,7 @@ const SignUpPage = () => {
 
   const onSubmit = async (data: SignupFormData) => {
     setIsLoading(true);
-    httpClient.post<ApiResponseType<UserType>>(API.AUTH.REGISTER, {...data})
+    httpClient.post<ApiResponse<User>>(API.AUTH.REGISTER, {...data})
     .then((response) => {
       const msg = response.data.message ? response.data.message : "Registration Successful";
       toast.success(msg);
@@ -112,7 +112,7 @@ const SignUpPage = () => {
                   render={({field}) => (
                     <FormItem>
                       <FormLabel className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                        <User className="w-4 h-4"/>
+                        <UserIcon className="w-4 h-4"/>
                         Full Name
                       </FormLabel>
                       <FormControl>

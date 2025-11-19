@@ -1,9 +1,9 @@
-export interface CredentialsType {
+export interface Credential {
   email: string;
   password: string;
 }
 
-export interface CustomUserType {
+export interface CustomUser {
   id: number;
   name: string;
   email: string;
@@ -14,7 +14,7 @@ export interface CustomUserType {
   image?: string | null;
 }
 
-export interface ApiResponseType<T> {
+export interface ApiResponse<T> {
   success: boolean;
   message: string;
   payload: T;

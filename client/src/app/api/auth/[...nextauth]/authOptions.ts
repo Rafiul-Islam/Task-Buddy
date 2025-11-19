@@ -2,10 +2,10 @@ import { NextAuthOptions, Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import httpClient from "@/lib/http-client";
 import {
-  CredentialsType,
-  CustomUserType,
+  Credential,
+  CustomUser,
   ERROR_TYPE_TO_FORCE_LOGOUT,
-  ApiResponseType,
+  ApiResponse,
 } from "@/types/auth";
 import { JWT } from "next-auth/jwt";
 import {
@@ -33,7 +33,7 @@ function getJwtExpiry(token: string): number | null {
 async function refreshAccessToken(token: JWT): Promise<JWT> {
   try {
     const { data } = await httpClient.post<
-      ApiResponseType<{ accessToken: string }>
+      ApiResponse<{ accessToken: string }>
     >(AUTH_API_ENDPOINTS.REFRESH, {
       refreshToken: token.refreshToken,
     });
@@ -73,12 +73,12 @@ const authOptions: NextAuthOptions = {
       credentials: {},
       authorize: async (credentials) => {
         try {
-          const { email, password } = credentials as CredentialsType;
+          const { email, password } = credentials as Credential;
           if (!email || !password)
             throw new Error(AUTH_MESSAGES.SIGN_IN.FAILURE);
 
           const { data } = await httpClient.post<
-            ApiResponseType<CustomUserType>
+            ApiResponse<CustomUser>
           >(AUTH_API_ENDPOINTS.SIGN_IN.CREDENTIALS, {
             email,
             password,
@@ -105,7 +105,7 @@ const authOptions: NextAuthOptions = {
     async jwt({ token, user }): Promise<JWT> {
       // --- First-time login with credentials ---
       if (user) {
-        const u = user as unknown as Partial<CustomUserType>;
+        const u = user as unknown as Partial<CustomUser>;
         const accessToken = u.accessToken ?? token.accessToken;
         return {
           ...token,
