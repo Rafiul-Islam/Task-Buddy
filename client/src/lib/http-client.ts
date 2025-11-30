@@ -21,7 +21,7 @@ export class ApiClient<T> {
     return httpClient.get<ApiResponse<T[]>>(this.apiEndPoint).then(res => res.data.payload);
   }
 
-  getOne = (id: string) => {
+  getOne = (id: number) => {
     return httpClient.get<ApiResponse<T>>(`${this.apiEndPoint}/${id}`).then(res => res.data.payload);
   }
 
@@ -29,11 +29,11 @@ export class ApiClient<T> {
     return httpClient.post<ApiResponse<T>>(this.apiEndPoint, data).then(res => res.data.payload);
   }
 
-  put = (id: string, data: T) => {
+  put = (id: number, data: T) => {
     return httpClient.put<ApiResponse<T>>(`${this.apiEndPoint}/${id}`, data).then(res => res.data.payload);
   }
 
-  delete = (id: string) => {
+  delete = (id: number) => {
     return httpClient.delete<ApiResponse<void>>(`${this.apiEndPoint}/${id}`).then(res => res.data.payload);
   }
 }

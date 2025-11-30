@@ -1,12 +1,12 @@
 "use client";
 
-import useTasks from "@/hooks/useTasks";
+import {useTasks} from "@/hooks/useTasks";
 import TodoTaskList from "@/app/(user)/tasks/components/TodoTaskList";
 import InProgressTaskList from "@/app/(user)/tasks/components/InProgressTaskList";
 import CompletedTaskList from "@/app/(user)/tasks/components/CompletedTaskList";
 
 const TaskView = () => {
-  const {data: tasks, isLoading, error} = useTasks();
+  const {tasks: {data: tasks, isLoading, error}} = useTasks();
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
