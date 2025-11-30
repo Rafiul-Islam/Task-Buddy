@@ -12,7 +12,7 @@ import * as z from "zod";
 import {signupSchema} from "@/schemas/authValidationSchema";
 import {toast} from "react-toastify";
 import Image from "next/image";
-import httpClient from "@/lib/http-client";
+import {httpClient} from "@/lib/http-client";
 import type {AxiosError} from "axios";
 import {AUTH_ROUTES} from "@/constants/auth";
 import Link from "next/link";

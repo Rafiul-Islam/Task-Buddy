@@ -1,13 +1,42 @@
 import axios from "axios";
 import {getSession} from "next-auth/react";
+import {ApiResponse} from "@/types/auth";
 
 // Create an Axios instance with default settings
-const httpClient = axios.create({
+export const httpClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_API_URL, // Use env variables
   headers: {
     "Content-Type": "application/json",
   },
 });
+
+export class ApiClient<T> {
+  apiEndPoint = '';
+
+  constructor(apiEndPoint: string) {
+    this.apiEndPoint = apiEndPoint;
+  }
+
+  getAll = () => {
+    return httpClient.get<ApiResponse<T[]>>(this.apiEndPoint).then(res => res.data.payload);
+  }
+
+  getOne = (id: string) => {
+    return httpClient.get<ApiResponse<T>>(`${this.apiEndPoint}/${id}`).then(res => res.data.payload);
+  }
+
+  post = (data: T) => {
+    return httpClient.post<ApiResponse<T>>(this.apiEndPoint, data).then(res => res.data.payload);
+  }
+
+  put = (id: string, data: T) => {
+    return httpClient.put<ApiResponse<T>>(`${this.apiEndPoint}/${id}`, data).then(res => res.data.payload);
+  }
+
+  delete = (id: string) => {
+    return httpClient.delete<ApiResponse<void>>(`${this.apiEndPoint}/${id}`).then(res => res.data.payload);
+  }
+}
 
 // Request interceptor to add tokens to headers
 httpClient.interceptors.request.use(
@@ -26,5 +55,3 @@ httpClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-export default httpClient;

@@ -1,6 +1,6 @@
 import { NextAuthOptions, Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import httpClient from "@/lib/http-client";
+import {httpClient} from "@/lib/http-client";
 import {
   Credential,
   CustomUser,
@@ -32,11 +32,7 @@ function getJwtExpiry(token: string): number | null {
 
 async function refreshAccessToken(token: JWT): Promise<JWT> {
   try {
-    const { data } = await httpClient.post<
-      ApiResponse<{ accessToken: string }>
-    >(AUTH_API_ENDPOINTS.REFRESH, {
-      refreshToken: token.refreshToken,
-    });
+    const { data } = await httpClient.post<ApiResponse<{ accessToken: string }>>(AUTH_API_ENDPOINTS.REFRESH, {refreshToken: token.refreshToken});
     const newAccessToken = data?.payload?.accessToken;
     return {
       ...token,
