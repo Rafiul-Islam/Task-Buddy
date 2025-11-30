@@ -1,11 +1,7 @@
-import {Task} from "@/types/task";
+import {Task, TaskComponentProps} from "@/types/task";
 import TaskCard from "@/app/(user)/tasks/components/TaskCard";
 
-interface Props {
-  tasks: Task[]
-}
-
-const CompletedTaskList = (props: Props) => {
+const CompletedTaskList = (props: TaskComponentProps) => {
   const {tasks} = props;
 
   return (

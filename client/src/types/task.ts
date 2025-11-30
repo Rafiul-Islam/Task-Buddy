@@ -8,3 +8,8 @@ export interface Task {
   priority: TASK_PRIORITY;
   status: TASK_STATUS;
 }
+
+export interface TaskComponentProps {
+  tasks: Task[]
+  onDelete: (id: number) => void
+}
