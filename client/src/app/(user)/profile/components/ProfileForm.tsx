@@ -12,7 +12,7 @@ const ProfileForm = () => {
   const {userObj} = useUser();
   const {updateInfo} = useUser();
 
-  const {register, handleSubmit, formState: {errors, isLoading}} = useForm<userFormData>({
+  const {register, handleSubmit, formState: {errors, isLoading, isSubmitting}} = useForm<userFormData>({
     resolver: zodResolver(userSchema),
     defaultValues: {
       email: userObj.user?.email || "",
@@ -52,8 +52,8 @@ const ProfileForm = () => {
           size="lg"
           label='Submit'
           processingLabel="Submitting..."
-          loading={isLoading}
-          disabled={isLoading}
+          loading={isLoading || isSubmitting}
+          disabled={isLoading || isSubmitting}
         />
       </form>
     </div>

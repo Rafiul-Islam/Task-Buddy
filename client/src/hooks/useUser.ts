@@ -1,9 +1,13 @@
 import {useSession} from "next-auth/react";
 import {useMutation} from "@tanstack/react-query";
 import {updateUserFormData} from "@/schemas/userSchema";
+import {httpClient} from "@/lib/http-client";
+import {ApiResponse} from "@/types/auth";
+import {User} from "@/types/user";
+import {toast} from "react-toastify";
 
 export const useUser = () => {
-  const {data: session, status} = useSession();
+  const {data: session, status, update} = useSession();
 
   const userObj = {
     user: session?.user,
@@ -14,13 +18,19 @@ export const useUser = () => {
 
   const updateInfo = useMutation({
     mutationFn: async (data: updateUserFormData) => {
-      console.log(data)
+      const response = await httpClient.put<ApiResponse<User>>(`/user/${userObj.user?.userId}`, data, {validateStatus: () => true})
+      .then(res => res.data);
+      if (!response.success) throw {message: response.message};
+      return response.payload;
     },
-    onSuccess: () => {
-      console.log("User updated successfully")
+    onSuccess: async (savedUser) => {
+      await update({user: savedUser});
+      console.log(savedUser);
+      toast.success("User updated successfully");
     },
-    onError: () => {
-      console.log("User update failed")
+    onError: (error) => {
+      console.log(error);
+      toast.error(error.message);
     },
   });
 

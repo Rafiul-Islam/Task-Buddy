@@ -98,7 +98,20 @@ const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }): Promise<JWT> {
+    async jwt({ token, user, trigger, session }): Promise<JWT> {
+      // --- Handle session update trigger ---
+      if (trigger === "update" && session?.user) {
+        return {
+          ...token,
+          userId: token.userId,
+          name: session.user.fullname ?? token.name,
+          email: session.user.email ?? token.email,
+          accessToken: token.accessToken,
+          refreshToken: token.refreshToken,
+          accessTokenExpires: token.accessTokenExpires,
+        };
+      }
+
       // --- First-time login with credentials ---
       if (user) {
         const u = user as unknown as Partial<CustomUser>;
@@ -108,9 +121,6 @@ const authOptions: NextAuthOptions = {
           userId: (u.id as number | undefined) ?? (token as JWT).userId,
           name: u.fullname ?? token.fullname,
           email: u.email ?? token.email,
-          image: (u.image ?? token.image ?? "") || undefined,
-          verified: u.verified ?? (token as JWT).verified,
-          role: u.role ?? (token as JWT).role,
           accessToken,
           refreshToken: u.refreshToken ?? token.refreshToken,
           accessTokenExpires: accessToken
