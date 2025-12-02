@@ -24,9 +24,11 @@ const TextareaField = ({
       </label>
       <textarea
         {...textareaProps}
-        className={`flex h-24 w-full min-w-0 rounded-lg border-2 border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-900 placeholder:text-gray-500 transition-all duration-200 hover:border-gray-400 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-gray-50 shadow-sm hover:shadow-md resize-none ${
-          error ? "border-red-500 ring-red-500/20" : ""
-        } ${className} ${textareaProps.className || ""}`}
+        className={`flex h-24 w-full min-w-0 rounded-lg border-2 border-gray-300 bg-white px-4 py-3 text-sm font-medium
+         text-gray-900 placeholder:text-gray-500 transition-all duration-200 hover:border-gray-400 
+         focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 disabled:pointer-events-none
+          disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-gray-50 shadow-sm hover:shadow-md resize-none
+        ${className} ${textareaProps.className || ""}`}
       />
       <FormErrorMessage error={error} />
     </fieldset>

@@ -55,7 +55,7 @@ export function AdminHeader({onMobileMenuToggle}: AdminHeaderProps) {
       <div className="flex items-center gap-4">
         <Menu
           onClick={onMobileMenuToggle}
-          className="h-6 w-6 group-hover:rotate-180 transition-transform duration-300 cursor-pointer lg:hidden"
+          className="h-6 w-6 group-hover:rotate-180 transition-transform duration-300 cursor-pointer md:hidden"
         />
       </div>
       <div className="flex items-center gap-3">

@@ -25,9 +25,7 @@ const InputField = ({
       </label>
       <Input
         {...inputProps}
-        className={`${
-          error ? "border-red-500 ring-red-500/20" : ""
-        } ${className} ${inputProps.className || ""}`}
+        className={`${className} ${inputProps.className || ""}`}
       />
       <FormErrorMessage error={error} />
     </fieldset>
