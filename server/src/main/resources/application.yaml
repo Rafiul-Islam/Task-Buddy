@@ -2,9 +2,9 @@ spring:
   application:
     name: TaskBuddy
   datasource:
-    url: jdbc:postgresql://localhost:5432/task_buddy
-    username: postgres
-    password: 1234
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -14,7 +14,8 @@ spring:
     secret: ${JWT_SECRET}
     accessTokenExpirationTime: 1800000       # 30 minutes
     refreshTokenExpirationTime: 1296000000    # 15 days
+  config:
+    additional-location: classpath:/
 
 server:
   port: 8081
-
