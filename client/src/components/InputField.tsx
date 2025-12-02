@@ -19,8 +19,8 @@ const InputField = ({
   className = "",
 }: Props) => {
   return (
-    <fieldset className="space-y-2">
-      <label className="block text-sm font-semibold text-gray-700 mb-2">
+    <fieldset className="space-y-1 mb-4">
+      <label className="block text-sm font-semibold text-gray-700">
         {title} {required && <span className="text-red-500 ml-1">*</span>}
       </label>
       <Input
