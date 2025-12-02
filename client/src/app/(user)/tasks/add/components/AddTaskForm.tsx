@@ -17,7 +17,6 @@ const AddTaskForm = () => {
 
   const {createTask} = useTasks();
 
-
   const {register, handleSubmit, formState: {errors, isLoading}, reset, setValue, getValues} = useForm<TaskAddFormData>({
     resolver: zodResolver(taskSchema),
   });

@@ -1,14 +1,20 @@
+"use client"
+
 import {Task} from "@/types/task";
 import {Pencil, Trash} from "lucide-react";
 import {confirmDelete} from "@/components/ConfirmationDialog";
+import {useRouter} from "next/navigation";
 
 interface Props {
   task: Task,
-  onDelete: (id: number) => void
+  onDelete: (id:number) => void
 }
 
 const TaskCard = ({task, onDelete}: Props) => {
   const {id, title, description, priority} = task;
+
+  const router = useRouter();
+
   const handleDelete = async () => {
     const result = await confirmDelete();
     if (result?.isConfirmed) onDelete(id);
@@ -24,6 +30,7 @@ const TaskCard = ({task, onDelete}: Props) => {
       </div>
       <div className="flex justify-end gap-2 mt-2">
         <button
+          onClick={() => router.push(`/tasks/edit/${id}`)}
           className="bg-blue-100 hover:bg-blue-600 hover:text-white text-blue-500  h-10 w-10 flex items-center justify-center rounded-full cursor-pointer transition duration-200">
           <Pencil size={19}/>
         </button>

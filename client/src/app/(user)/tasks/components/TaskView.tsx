@@ -12,9 +12,18 @@ const TaskView = () => {
   if (error) return <p>Error: {error.message}</p>;
   return (
     <div className='grid grid-cols-3 gap-4 p-4'>
-      <TodoTaskList tasks={tasks || []} onDelete={deleteTask.mutate}/>
-      <InProgressTaskList tasks={tasks || []} onDelete={deleteTask.mutate}/>
-      <CompletedTaskList tasks={tasks || []} onDelete={deleteTask.mutate}/>
+      <TodoTaskList
+        tasks={tasks || []}
+        onDelete={deleteTask.mutate}
+      />
+      <InProgressTaskList
+        tasks={tasks || []}
+        onDelete={deleteTask.mutate}
+      />
+      <CompletedTaskList
+        tasks={tasks || []}
+        onDelete={deleteTask.mutate}
+      />
     </div>
   );
 };

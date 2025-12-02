@@ -6,6 +6,7 @@ import EditTaskHeader from "./components/EditTaskHeader";
 import EditTaskForm from "./components/EditTaskForm";
 import {useTasks} from "@/hooks/useTasks";
 import {Button} from "@/components/ui/button";
+import {Task} from "@/types/task";
 
 const EditTaskPage = () => {
   const params = useParams();
@@ -32,7 +33,7 @@ const EditTaskPage = () => {
     <div className="min-h-screen p-8">
       <div className="max-w-2xl mx-auto px-4">
         <EditTaskHeader />
-        <EditTaskForm />
+        <EditTaskForm task={task || {} as Task} />
       </div>
     </div>
   );

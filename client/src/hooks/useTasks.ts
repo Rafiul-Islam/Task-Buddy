@@ -16,15 +16,14 @@ export const useTasks = () => {
     },
   });
 
-  const useTask = (id: number) =>
-    useQuery({
-      queryKey: [CACHE_KEYS.TASKS, id],
-      queryFn: async () => {
-        const res = await taskService.getOne(id);
-        if (!res.success) throw {message: res.message};
-        return res.payload;
-      },
-    });
+  const useTask = (id: number) => useQuery({
+    queryKey: [CACHE_KEYS.TASKS, id],
+    queryFn: async () => {
+      const res = await taskService.getOne(id);
+      if (!res.success) throw {message: res.message};
+      return res.payload;
+    },
+  });
 
   const createTask = useMutation({
     mutationFn: async (newTask: Task) => {
@@ -66,6 +65,7 @@ export const useTasks = () => {
       return {previous};
     },
     onSuccess: (savedTask, updatedTask) => {
+      queryClient.setQueryData<Task>([CACHE_KEYS.TASKS, updatedTask.id], savedTask);
       queryClient.setQueryData<Task[]>([CACHE_KEYS.TASKS], (old = []) =>
         old.map((t) => (t.id === updatedTask.id ? savedTask : t))
       );

@@ -9,7 +9,11 @@ const TodoTaskList = (props: TaskComponentProps) => {
       <h2 className="text-lg font-medium text-center italic">TODO Tasks</h2>
       <div className='space-y-2 mt-5 max-h-[55vh] overflow-y-auto'>
         {tasks.filter((task) => task.status === 'TODO').map((task) => (
-          <TaskCard key={task.id} task={task} onDelete={onDelete}/>
+          <TaskCard
+            key={task.id}
+            task={task}
+            onDelete={onDelete}
+          />
         ))}
       </div>
     </div>
