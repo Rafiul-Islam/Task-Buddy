@@ -3,7 +3,7 @@
 import Swal from "sweetalert2";
 
 export const confirmDelete = async () => {
-  return Swal.fire({
+  return await Swal.fire({
     title: "Are you sure?",
     text: "You won't be able to revert this!",
     icon: "warning",

@@ -1,13 +1,19 @@
 import {Task} from "@/types/task";
 import {Pencil, Trash} from "lucide-react";
+import {confirmDelete} from "@/components/ConfirmationDialog";
 
 interface Props {
   task: Task,
-  onDelete: (id:number) => void
+  onDelete: (id: number) => void
 }
 
 const TaskCard = ({task, onDelete}: Props) => {
   const {id, title, description, priority} = task;
+  const handleDelete = async () => {
+    const result = await confirmDelete();
+    if (result?.isConfirmed) onDelete(id);
+  }
+
   return (
     <div className={`bg-white rounded shadow-lg p-5`}>
       <h3 className="text-lg font-medium capitalize">{title}</h3>
@@ -22,7 +28,7 @@ const TaskCard = ({task, onDelete}: Props) => {
           <Pencil size={19}/>
         </button>
         <button
-          onClick={() => onDelete(id)}
+          onClick={handleDelete}
           className="bg-red-100 hover:bg-red-600 hover:text-white text-red-500  h-10 w-10 flex items-center justify-center rounded-full cursor-pointer transition duration-200">
           <Trash size={20}/>
         </button>

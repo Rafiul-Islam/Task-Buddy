@@ -1,6 +1,6 @@
 "use client";
 
-import {FieldValues, useForm} from "react-hook-form";
+import {useForm} from "react-hook-form";
 import {TaskAddFormData, taskSchema} from "@/schemas/taskSchema";
 import {zodResolver} from "@hookform/resolvers/zod";
 import InputField from "@/components/InputField";
