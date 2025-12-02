@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import taskService from "@/services/taskService";
 import CACHE_KEYS from "@/constants/cache-keys";
 import { Task } from "@/types/task";
+import {toast} from "react-toastify";
 
 export const useTasks = () => {
   const queryClient = useQueryClient();
@@ -32,9 +33,11 @@ export const useTasks = () => {
       queryClient.setQueryData<Task[]>([CACHE_KEYS.TASKS], (old = []) =>
         old.map((t) => (t === newTask ? savedTask : t))
       );
+      toast.success("Task created successfully");
     },
     onError: (err, newTask, ctx) => {
       queryClient.setQueryData([CACHE_KEYS.TASKS], ctx?.previous);
+      toast.error("Failed to create task");
     },
   });
 
@@ -52,9 +55,11 @@ export const useTasks = () => {
       queryClient.setQueryData<Task[]>([CACHE_KEYS.TASKS], (old = []) =>
         old.map((t) => (t.id === updatedTask.id ? saved : t))
       );
+      toast.success("Task updated successfully");
     },
     onError: (err, updatedTask, ctx) => {
       queryClient.setQueryData([CACHE_KEYS.TASKS], ctx?.previous);
+      toast.error("Failed to update task");
     },
   });
 
@@ -66,10 +71,12 @@ export const useTasks = () => {
       queryClient.setQueryData<Task[]>([CACHE_KEYS.TASKS], (old = []) =>
         old.filter((t) => t.id !== id)
       );
+      toast.success("Task deleted successfully");
       return { previous };
     },
     onError: (err, id, ctx) => {
       queryClient.setQueryData([CACHE_KEYS.TASKS], ctx?.previous);
+      toast.error("Failed to delete task");
     },
   });
 

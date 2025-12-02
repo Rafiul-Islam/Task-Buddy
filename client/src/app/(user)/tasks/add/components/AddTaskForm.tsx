@@ -8,18 +8,22 @@ import TextareaField from "@/components/TextAreaField";
 import SubmitButton from "@/components/SubmitButton";
 import {DropdownField} from "@/components/DropdownField";
 import {PriorityType, StatusType, TASK_PRIORITIES, TASK_STATUSES} from "@/constants/task";
+import {useTasks} from "@/hooks/useTasks";
 
 const taskPriorities = Object.values(TASK_PRIORITIES);
 const taskStatuses = Object.values(TASK_STATUSES);
 
 const AddTaskForm = () => {
 
+  const {createTask} = useTasks();
+
+
   const {register, handleSubmit, formState: {errors, isLoading}, reset, setValue, getValues} = useForm<TaskAddFormData>({
     resolver: zodResolver(taskSchema),
-  })
+  });
 
-  const onSubmit = (data: FieldValues) => {
-    console.log(data);
+  const onSubmit = (data: TaskAddFormData) => {
+    createTask.mutate({id: 0, ...data});
     reset();
     setValue("priority", "LOW");
     setValue("status", "TODO");
