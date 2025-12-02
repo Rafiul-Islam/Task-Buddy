@@ -9,6 +9,7 @@ interface Props {
   error?: FieldError;
   required?: boolean;
   className?: string;
+  disabled?: boolean;
 }
 
 const InputField = ({
@@ -17,6 +18,7 @@ const InputField = ({
   error,
   required,
   className = "",
+  disabled = false,
 }: Props) => {
   return (
     <fieldset className="space-y-1 mb-4">
@@ -26,6 +28,7 @@ const InputField = ({
       <Input
         {...inputProps}
         className={`${className} ${inputProps.className || ""}`}
+        disabled={disabled}
       />
       <FormErrorMessage error={error} />
     </fieldset>

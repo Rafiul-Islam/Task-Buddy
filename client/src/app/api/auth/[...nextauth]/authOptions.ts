@@ -106,7 +106,7 @@ const authOptions: NextAuthOptions = {
         return {
           ...token,
           userId: (u.id as number | undefined) ?? (token as JWT).userId,
-          name: u.name ?? token.name,
+          name: u.fullname ?? token.fullname,
           email: u.email ?? token.email,
           image: (u.image ?? token.image ?? "") || undefined,
           verified: u.verified ?? (token as JWT).verified,

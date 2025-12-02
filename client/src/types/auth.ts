@@ -5,7 +5,7 @@ export interface Credential {
 
 export interface CustomUser {
   id: number;
-  name: string;
+  fullname: string;
   email: string;
   role: string;
   verified: boolean;

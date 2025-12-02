@@ -20,7 +20,8 @@ interface AdminHeaderProps {
 }
 
 export function AdminHeader({onMobileMenuToggle}: AdminHeaderProps) {
-  const {user, isLoading} = useUser();
+  const {userObj} = useUser();
+  const {user, isLoading} = userObj;
 
   // Helper function to get user initials
   const getUserInitials = (name: string) => {

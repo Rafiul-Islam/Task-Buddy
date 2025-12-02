@@ -3,7 +3,7 @@ import {getSession} from "next-auth/react";
 import {ApiResponse} from "@/types/auth";
 
 export const httpClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BASE_API_URL,
+  baseURL: process.env.NEXT_PUBLIC_BASE_API_URL, // Use env variables
   headers: {
     "Content-Type": "application/json",
   },

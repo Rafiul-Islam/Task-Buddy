@@ -32,7 +32,7 @@ public class UserController {
     return ApiResponseBuilder.success(HttpStatus.OK, "User found", userService.getCurrentUser());
   }
 
-  @PatchMapping("/{userId}")
+  @PutMapping("/{userId}")
   @Operation(summary = "Update a user")
   public ResponseEntity<ApiResponse<UserDto>> update(@PathVariable("userId") Long userId, @Valid @RequestBody UserUpdateRequest request) {
     User updatedUser = userService.update(userId, request);
