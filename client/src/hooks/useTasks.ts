@@ -48,6 +48,7 @@ export const useTasks = () => {
     onError: (err, newTask, ctx) => {
       queryClient.setQueryData([CACHE_KEYS.TASKS], ctx?.previous);
       toast.error("Failed to create task");
+      console.log("createTask - onError - err:", err);
     },
   });
 
@@ -74,6 +75,7 @@ export const useTasks = () => {
     onError: (err, updatedTask, ctx) => {
       queryClient.setQueryData([CACHE_KEYS.TASKS], ctx?.previous);
       toast.error("Failed to update task");
+      console.log("updateTask - onError - err:", err);
     },
   });
 
@@ -90,6 +92,7 @@ export const useTasks = () => {
     onError: (err, id, ctx) => {
       queryClient.setQueryData([CACHE_KEYS.TASKS], ctx?.previous);
       toast.error("Failed to delete task");
+      console.log("deleteTask - onError - err:", err);
     },
   });
 
