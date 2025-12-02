@@ -2,9 +2,8 @@ import axios from "axios";
 import {getSession} from "next-auth/react";
 import {ApiResponse} from "@/types/auth";
 
-// Create an Axios instance with default settings
 export const httpClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BASE_API_URL, // Use env variables
+  baseURL: process.env.NEXT_PUBLIC_BASE_API_URL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -18,23 +17,28 @@ export class ApiClient<T> {
   }
 
   getAll = () => {
-    return httpClient.get<ApiResponse<T[]>>(this.apiEndPoint).then(res => res.data.payload);
+    return httpClient.get<ApiResponse<T[]>>(this.apiEndPoint, {validateStatus: () => true})
+    .then(res => res.data);
   }
 
   getOne = (id: number) => {
-    return httpClient.get<ApiResponse<T>>(`${this.apiEndPoint}/${id}`).then(res => res.data.payload);
+    return httpClient.get<ApiResponse<T>>(`${this.apiEndPoint}/${id}`, {validateStatus: () => true})
+    .then(res => res.data);
   }
 
   post = (data: T) => {
-    return httpClient.post<ApiResponse<T>>(this.apiEndPoint, data).then(res => res.data.payload);
+    return httpClient.post<ApiResponse<T>>(this.apiEndPoint, data, {validateStatus: () => true})
+    .then(res => res.data);
   }
 
   put = (id: number, data: T) => {
-    return httpClient.put<ApiResponse<T>>(`${this.apiEndPoint}/${id}`, data).then(res => res.data.payload);
+    return httpClient.put<ApiResponse<T>>(`${this.apiEndPoint}/${id}`, data, {validateStatus: () => true})
+    .then(res => res.data);
   }
 
   delete = (id: number) => {
-    return httpClient.delete<ApiResponse<void>>(`${this.apiEndPoint}/${id}`).then(res => res.data.payload);
+    return httpClient.delete<ApiResponse<void>>(`${this.apiEndPoint}/${id}`, {validateStatus: () => true})
+    .then(res => res.data);
   }
 }
 

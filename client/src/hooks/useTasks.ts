@@ -1,7 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import taskService from "@/services/taskService";
 import CACHE_KEYS from "@/constants/cache-keys";
-import { Task } from "@/types/task";
+import {Task} from "@/types/task";
 import {toast} from "react-toastify";
 
 export const useTasks = () => {
@@ -9,25 +9,36 @@ export const useTasks = () => {
 
   const tasks = useQuery({
     queryKey: [CACHE_KEYS.TASKS],
-    queryFn: taskService.getAll,
+    queryFn: async () => {
+      const res = await taskService.getAll();
+      if (!res.success) throw {message: res.message};
+      return res.payload;
+    },
   });
 
   const useTask = (id: number) =>
     useQuery({
       queryKey: [CACHE_KEYS.TASKS, id],
-      queryFn: () => taskService.getOne(id),
+      queryFn: async () => {
+        const res = await taskService.getOne(id);
+        if (!res.success) throw {message: res.message};
+        return res.payload;
+      },
     });
 
   const createTask = useMutation({
-    mutationFn: (newTask: Task) => taskService.post(newTask),
+    mutationFn: async (newTask: Task) => {
+      const res = await taskService.post(newTask);
+      if (!res.success) throw {message: res.message};
+      return res.payload;
+    },
     onMutate: async (newTask) => {
-      await queryClient.cancelQueries({ queryKey: [CACHE_KEYS.TASKS] });
       const previous = queryClient.getQueryData<Task[]>([CACHE_KEYS.TASKS]);
       queryClient.setQueryData<Task[]>([CACHE_KEYS.TASKS], (old = []) => [
         newTask,
         ...old,
       ]);
-      return { previous };
+      return {previous};
     },
     onSuccess: (savedTask, newTask) => {
       queryClient.setQueryData<Task[]>([CACHE_KEYS.TASKS], (old = []) =>
@@ -42,18 +53,21 @@ export const useTasks = () => {
   });
 
   const updateTask = useMutation({
-    mutationFn: (task: Task) => taskService.put(task.id, task),
+    mutationFn: async (task: Task) => {
+      const res = await taskService.put(task.id, task);
+      if (!res.success) throw {message: res.message};
+      return res.payload;
+    },
     onMutate: async (updatedTask) => {
-      await queryClient.cancelQueries({ queryKey: [CACHE_KEYS.TASKS] });
       const previous = queryClient.getQueryData<Task[]>([CACHE_KEYS.TASKS]);
       queryClient.setQueryData<Task[]>([CACHE_KEYS.TASKS], (old = []) =>
         old.map((t) => (t.id === updatedTask.id ? updatedTask : t))
       );
-      return { previous };
+      return {previous};
     },
-    onSuccess: (saved, updatedTask) => {
+    onSuccess: (savedTask, updatedTask) => {
       queryClient.setQueryData<Task[]>([CACHE_KEYS.TASKS], (old = []) =>
-        old.map((t) => (t.id === updatedTask.id ? saved : t))
+        old.map((t) => (t.id === updatedTask.id ? savedTask : t))
       );
       toast.success("Task updated successfully");
     },
@@ -66,13 +80,12 @@ export const useTasks = () => {
   const deleteTask = useMutation({
     mutationFn: (id: number) => taskService.delete(id),
     onMutate: async (id) => {
-      await queryClient.cancelQueries({ queryKey: [CACHE_KEYS.TASKS] });
       const previous = queryClient.getQueryData<Task[]>([CACHE_KEYS.TASKS]);
       queryClient.setQueryData<Task[]>([CACHE_KEYS.TASKS], (old = []) =>
         old.filter((t) => t.id !== id)
       );
       toast.success("Task deleted successfully");
-      return { previous };
+      return {previous};
     },
     onError: (err, id, ctx) => {
       queryClient.setQueryData([CACHE_KEYS.TASKS], ctx?.previous);
