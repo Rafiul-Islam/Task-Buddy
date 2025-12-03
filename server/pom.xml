@@ -107,6 +107,7 @@
   </dependencies>
 
   <build>
+    <finalName>taskbuddy</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -124,6 +125,7 @@
             </path>
           </annotationProcessorPaths>
         </configuration>
+
       </plugin>
       <plugin>
         <groupId>org.springframework.boot</groupId>
