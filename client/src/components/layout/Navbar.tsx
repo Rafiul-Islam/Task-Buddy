@@ -88,9 +88,17 @@ export function AdminHeader({onMobileMenuToggle}: AdminHeaderProps) {
             <DropdownMenuSeparator className="bg-gray-100"/>
             <Link href="/profile">
               <DropdownMenuItem
-                className="text-gray-700 hover:bg-blue-50 hover:text-blue-700 duration-200 group cursor-pointer py-3 px-4 rounded-md mx-2 my-1 font-medium">
+                className="text-gray-700 hover:bg-blue-50 hover:text-indigo-700 duration-200 group cursor-pointer py-3 px-4 rounded-md mx-2 my-1 font-medium">
                 <User className="mr-3 h-4 w-4"/>
                 <span>Profile</span>
+              </DropdownMenuItem>
+            </Link>
+            <DropdownMenuSeparator className="bg-gray-100"/>
+            <Link href="/change-password">
+              <DropdownMenuItem
+                className="text-gray-700 hover:bg-blue-50 hover:text-blue-700 duration-200 group cursor-pointer py-3 px-4 rounded-md mx-2 my-1 font-medium">
+                <User className="mr-3 h-4 w-4"/>
+                <span>Change Password</span>
               </DropdownMenuItem>
             </Link>
             <DropdownMenuSeparator className="bg-gray-100"/>

@@ -22,15 +22,15 @@ const PasswordInput = ({ title, inputProps, error, required, className = '' }: P
   };
 
   return (
-    <fieldset className="space-y-2">
-      <label className="block text-sm font-semibold text-gray-700 mb-2">
+    <fieldset className="space-y-2 mb-4">
+      <label className="block text-sm font-semibold text-gray-700">
         {title} {required && <span className="text-red-500 ml-1">*</span>}
       </label>
       <div className="relative">
         <Input
           {...inputProps}
           type={showPassword ? 'text' : 'password'}
-          className={`${error ? 'border-red-500 ring-red-500/20' : ''} ${className} ${inputProps.className || ''} pr-10`}
+          className={`${className} ${inputProps.className || ''} pr-10`}
         />
         <button
           type="button"

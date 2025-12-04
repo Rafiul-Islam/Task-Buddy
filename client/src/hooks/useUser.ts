@@ -34,8 +34,25 @@ export const useUser = () => {
     },
   });
 
+  const changePassword = useMutation({
+    mutationFn: async (data: {oldPassword: string, newPassword: string}) => {
+      const response = await httpClient.post<ApiResponse<User>>(`/user/${userObj.user?.userId}/change-password`, data, {validateStatus: () => true})
+      .then(res => res.data);
+      if (!response.success) throw {message: response.message};
+      return response.payload;
+    },
+    onSuccess: async () => {
+      toast.success("User updated successfully");
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error(error.message);
+    },
+  })
+
   return {
     userObj,
-    updateInfo
+    updateInfo,
+    changePassword
   }
 }

@@ -23,8 +23,9 @@ const EditTaskForm = ({task}: Props) => {
 
   const router = useRouter();
   const {updateTask} = useTasks();
+  const {mutate, isPending} = updateTask;
 
-  const {register, handleSubmit, formState: {errors, isLoading}, reset, setValue, watch} = useForm<TaskAddFormData>({
+  const {register, handleSubmit, formState: {errors}, reset, setValue, watch} = useForm<TaskAddFormData>({
     resolver: zodResolver(taskSchema),
     defaultValues: {
       title: task.title,
@@ -35,7 +36,7 @@ const EditTaskForm = ({task}: Props) => {
   });
 
   const onSubmit = (data: TaskAddFormData) => {
-    updateTask.mutate({id: task.id, ...data});
+    mutate({id: task.id, ...data});
     reset();
     setValue("priority", "LOW");
     setValue("status", "TODO");
@@ -82,8 +83,8 @@ const EditTaskForm = ({task}: Props) => {
           size="lg"
           label='Submit'
           processingLabel="Submitting..."
-          loading={isLoading}
-          disabled={isLoading}
+          loading={isPending}
+          disabled={isPending}
         />
       </form>
     </div>

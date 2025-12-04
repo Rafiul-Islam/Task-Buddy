@@ -16,13 +16,14 @@ const taskStatuses = Object.values(TASK_STATUSES);
 const AddTaskForm = () => {
 
   const {createTask} = useTasks();
+  const {mutate, isPending} = createTask;
 
-  const {register, handleSubmit, formState: {errors, isLoading}, reset, setValue, getValues} = useForm<TaskAddFormData>({
+  const {register, handleSubmit, formState: {errors}, reset, setValue, getValues} = useForm<TaskAddFormData>({
     resolver: zodResolver(taskSchema),
   });
 
   const onSubmit = (data: TaskAddFormData) => {
-    createTask.mutate({id: 0, ...data});
+    mutate({id: 0, ...data});
     reset();
     setValue("priority", "LOW");
     setValue("status", "TODO");
@@ -68,8 +69,8 @@ const AddTaskForm = () => {
           size="lg"
           label='Submit'
           processingLabel="Submitting..."
-          loading={isLoading}
-          disabled={isLoading}
+          loading={isPending}
+          disabled={isPending}
         />
       </form>
     </div>

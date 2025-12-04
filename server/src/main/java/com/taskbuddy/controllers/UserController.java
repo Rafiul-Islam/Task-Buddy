@@ -49,9 +49,9 @@ public class UserController {
 
   @PostMapping("{userId}/change-password")
   @Operation(summary = "Change password")
-  public ResponseEntity<Void> changePassword(@PathVariable(value = "userId") Long userId, @Valid @RequestBody ChangePasswordRequest request) {
+  public ResponseEntity<ApiResponse<Void>> changePassword(@PathVariable(value = "userId") Long userId, @Valid @RequestBody ChangePasswordRequest request) {
     userService.changePassword(userId, request);
-    return ResponseEntity.noContent().build();
+    return ApiResponseBuilder.success(HttpStatus.OK, "Password changed successfully", null);
   }
 
 }

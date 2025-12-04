@@ -11,8 +11,9 @@ import {useUser} from "@/hooks/useUser";
 const ProfileForm = () => {
   const {userObj} = useUser();
   const {updateInfo} = useUser();
+  const {mutate, isPending} = updateInfo;
 
-  const {register, handleSubmit, formState: {errors, isLoading, isSubmitting}} = useForm<userFormData>({
+  const {register, handleSubmit, formState: {errors}} = useForm<userFormData>({
     resolver: zodResolver(userSchema),
     defaultValues: {
       email: userObj.user?.email || "",
@@ -20,8 +21,8 @@ const ProfileForm = () => {
     }
   });
 
-  const onSubmit = (data:FieldValues) => {
-    updateInfo.mutate({fullname: data.fullname});
+  const onSubmit = (data: FieldValues) => {
+    mutate({fullname: data.fullname});
   }
 
   return (
@@ -52,8 +53,8 @@ const ProfileForm = () => {
           size="lg"
           label='Submit'
           processingLabel="Submitting..."
-          loading={isLoading || isSubmitting}
-          disabled={isLoading || isSubmitting}
+          loading={isPending}
+          disabled={isPending}
         />
       </form>
     </div>
