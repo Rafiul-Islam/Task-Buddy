@@ -49,7 +49,7 @@ public class UserController {
 
   @PostMapping("{userId}/change-password")
   @Operation(summary = "Change password")
-  public ResponseEntity<Void> resetPassword(@PathVariable(value = "userId") Long userId, @Valid @RequestBody ChangePasswordRequest request) {
+  public ResponseEntity<Void> changePassword(@PathVariable(value = "userId") Long userId, @Valid @RequestBody ChangePasswordRequest request) {
     userService.changePassword(userId, request);
     return ResponseEntity.noContent().build();
   }
