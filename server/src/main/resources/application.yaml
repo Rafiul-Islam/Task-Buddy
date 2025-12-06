@@ -19,3 +19,19 @@ spring:
 
 server:
   port: 8081
+
+app:
+  jwt:
+    reset-password-token-secret-key: ${JWT_RESET_PASSWORD_SECRET_KEY}
+    reset-token-expiration-in-ms: ${JWT_RESET_PASSWORD_TOKEN_EXPIRED_IN}
+  frontend:
+    urls:
+      - ${APP_FRONTEND_LOCAL_BASE_URL}
+      - ${APP_FRONTEND_PRODUCTION_BASE_URL}
+  supported-http-methods:
+    - GET
+    - POST
+    - PUT
+    - PATCH
+    - DELETE
+    - OPTIONS

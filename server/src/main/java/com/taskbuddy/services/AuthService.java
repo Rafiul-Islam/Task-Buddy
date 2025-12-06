@@ -1,14 +1,13 @@
 package com.taskbuddy.services;
 
-import com.taskbuddy.dtos.auth.LoginRequest;
-import com.taskbuddy.dtos.auth.LoginResponse;
-import com.taskbuddy.dtos.auth.RefreshTokenRequest;
-import com.taskbuddy.dtos.auth.RegistrationRequest;
+import com.taskbuddy.dtos.auth.*;
 import com.taskbuddy.entities.User;
 import com.taskbuddy.exeptions.NotFoundException;
 import com.taskbuddy.mappers.UserMapper;
 import com.taskbuddy.repositories.UserRepository;
+import com.taskbuddy.utils.JwtUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -24,6 +23,7 @@ public class AuthService {
   private final AuthenticationManager authenticationManager;
   private final UserRepository userRepository;
   private final JwtService jwtService;
+  private final JwtUtils jwtUtils;
   private final UserMapper userMapper;
 
   public void register(RegistrationRequest request) {
@@ -59,5 +59,10 @@ public class AuthService {
     var user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
 
     return jwtService.generateAccessToken(user).toString();
+  }
+
+  public String forgotPassword(@Valid ResetPasswordRequest request) {
+    var user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new NotFoundException("User not found"));
+    return jwtUtils.generateResetPasswordToken(user.getEmail());
   }
 }

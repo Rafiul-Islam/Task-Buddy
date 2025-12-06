@@ -1,5 +1,6 @@
 package com.taskbuddy.controllers;
 
+import com.taskbuddy.dtos.auth.ResetPasswordRequest;
 import com.taskbuddy.dtos.auth.*;
 import com.taskbuddy.dtos.common.ApiResponse;
 import com.taskbuddy.payload.ApiResponseBuilder;
@@ -42,6 +43,13 @@ public class AuthController {
   public ResponseEntity<ApiResponse<RefreshTokenResponse>> refresh(@RequestBody RefreshTokenRequest request) {
     var accessToken = authService.refresh(request);
     return ApiResponseBuilder.success(HttpStatus.OK, "New accessToken", new RefreshTokenResponse(accessToken));
+  }
+
+  @PostMapping("/forgot-password")
+  @Operation(summary = "Reset a user's password")
+  public ResponseEntity<ApiResponse<String>> forgotPassword(@Valid @RequestBody ResetPasswordRequest request) {
+    String resetToken = authService.forgotPassword(request);
+    return ApiResponseBuilder.success(HttpStatus.OK, "An email has been sent to your email address with a reset password link", resetToken);
   }
 
 }
