@@ -1,6 +1,6 @@
 package com.taskbuddy.controllers;
 
-import com.taskbuddy.dtos.auth.ResetPasswordRequest;
+import com.taskbuddy.dtos.auth.ForgotPasswordRequest;
 import com.taskbuddy.dtos.auth.*;
 import com.taskbuddy.dtos.common.ApiResponse;
 import com.taskbuddy.payload.ApiResponseBuilder;
@@ -46,10 +46,17 @@ public class AuthController {
   }
 
   @PostMapping("/forgot-password")
-  @Operation(summary = "Reset a user's password")
-  public ResponseEntity<ApiResponse<Void>> forgotPassword(@Valid @RequestBody ResetPasswordRequest request) {
+  @Operation(summary = "Forgot a user's password")
+  public ResponseEntity<ApiResponse<Void>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
     authService.forgotPassword(request);
     return ApiResponseBuilder.success(HttpStatus.OK, "If any user registered with this email, an email has been sent to this email address with a reset password link", null);
+  }
+
+  @PostMapping("/validate-reset-password-link")
+  @Operation(summary = "Validate a user's reset password link")
+  public ResponseEntity<ApiResponse<Void>> validateResetPasswordLink(@Valid @RequestBody ResetPasswordLinkValidateRequest request) {
+    authService.validateResetPasswordLink(request);
+    return ApiResponseBuilder.success(HttpStatus.OK, "Reset password link is valid", null);
   }
 
 }

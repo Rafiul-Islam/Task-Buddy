@@ -1,12 +1,13 @@
 package com.taskbuddy.services;
 
 import com.taskbuddy.dtos.auth.*;
+import com.taskbuddy.entities.ResetPasswordRecords;
 import com.taskbuddy.entities.User;
 import com.taskbuddy.exeptions.NotFoundException;
 import com.taskbuddy.mappers.UserMapper;
 import com.taskbuddy.utils.JwtUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +16,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Slf4j
@@ -29,9 +31,13 @@ public class AuthService {
   private final JwtUtils jwtUtils;
   private final UserMapper userMapper;
   private final PasswordResetEmailService passwordResetEmailService;
+  private final ResetPasswordRecordsService resetPasswordRecordsService;
 
   @Value("${app.frontend-url}")
   String frontendUrl;
+
+  @Value("${app.jwt.reset-token-expiration-in-ms}")
+  long resetPasswordTokenExpiryTimeInMs;
 
   private String generateResetPasswordLink(String token) {
     return frontendUrl + "/auth/reset-password?reset-password-token=" + token;
@@ -81,12 +87,36 @@ public class AuthService {
     return jwtService.generateAccessToken(user).toString();
   }
 
-  public void forgotPassword(@Valid ResetPasswordRequest request) {
+  @Transactional
+  public void forgotPassword(ForgotPasswordRequest request) {
     Optional<User> user = userService.getUserByEmail(request.getEmail());
     if (user.isEmpty()) return;
     String token = jwtUtils.generateResetPasswordToken(user.get().getEmail());
+
+    ResetPasswordRecords resetPasswordRecords = ResetPasswordRecords.builder()
+      .token(token)
+      .userEmail(user.get().getEmail())
+      .expiresAt(LocalDateTime.now().plusSeconds(resetPasswordTokenExpiryTimeInMs / 1000))
+      .build();
+    resetPasswordRecordsService.save(resetPasswordRecords);
+
     boolean isEmailSent = sendResetPasswordEmail(request.getEmail(), token);
     if (!isEmailSent) throw new RuntimeException("Failed to send email");
     log.info("Email sent successfully");
+  }
+
+  public void validateResetPasswordLink(ResetPasswordLinkValidateRequest request) {
+    try {
+      String email = jwtUtils.validateAndExtractEmail(request.getToken());
+      ResetPasswordRecords resetPasswordRecords = resetPasswordRecordsService.getByToken(request.getToken())
+        .orElseThrow(() -> new NotFoundException("Reset password record not found"));
+
+      if (!resetPasswordRecords.getUserEmail().equals(email) || !resetPasswordRecords.getToken().equals(request.getToken())) {
+        throw new BadCredentialsException("Invalid Reset password token");
+      }
+
+    } catch (Exception e) {
+      throw new BadCredentialsException("Invalid reset password token");
+    }
   }
 }

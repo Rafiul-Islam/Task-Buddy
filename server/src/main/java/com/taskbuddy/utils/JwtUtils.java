@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
 import java.util.Date;
 
 @Component
@@ -67,7 +66,7 @@ public class JwtUtils {
       .compact();
   }
 
-  public String extractEmail(String token) {
+  public String validateAndExtractEmail(String token) {
     return Jwts.parser()
       .verifyWith(jwtConfig.getSignInKey())
       .build()
@@ -75,4 +74,5 @@ public class JwtUtils {
       .getPayload()
       .getSubject();
   }
+
 }

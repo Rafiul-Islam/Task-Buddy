@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class ResetPasswordRequest {
+public class ForgotPasswordRequest {
   @NotBlank(message = "Email is required")
   @Size(min = 3, max = 255, message = "Email must be between 3 and 255 characters long")
   @Email(message = "Invalid email format")
