@@ -153,6 +153,12 @@ const SigninPage = () => {
                   )}
                 />
 
+                <div>
+                  <Link className="block text-green-600 hover:text-green-800 italic text-sm text-right" href="/forgot-password">
+                      Forgot Password
+                  </Link>
+                </div>
+
                 {/* Submit Button */}
                 <Button
                   type="submit"

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, {ReactNode, useState} from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import FormErrorMessage from '@/components/FormErrorMessage';
 import { FieldError } from 'react-hook-form';
@@ -12,9 +12,10 @@ interface Props {
   error?: FieldError;
   required?: boolean;
   className?: string;
+  icon?: ReactNode
 }
 
-const PasswordInput = ({ title, inputProps, error, required, className = '' }: Props) => {
+const PasswordInput = ({ title, inputProps, error, required, className = '', icon }: Props) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
@@ -23,8 +24,8 @@ const PasswordInput = ({ title, inputProps, error, required, className = '' }: P
 
   return (
     <fieldset className="space-y-2 mb-4">
-      <label className="block text-sm font-semibold text-gray-700">
-        {title} {required && <span className="text-red-500 ml-1">*</span>}
+      <label className="text-sm font-semibold text-gray-700 flex items-center gap-1.5">
+        {icon && icon} {title} {required && <span className="text-red-500 ml-1">*</span>}
       </label>
       <div className="relative">
         <Input

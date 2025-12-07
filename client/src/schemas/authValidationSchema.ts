@@ -52,3 +52,15 @@ export const forgotPasswordSchema = z.object({
   email: emailSchema,
 });
 export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
+
+export const validateTokenSchema = z.object({
+  token: z.string().trim().min(1, {message: "Token is required"}),
+});
+export type ValidateTokenFormData = z.infer<typeof validateTokenSchema>;
+
+export const resetPasswordSchema = z.object({
+  newPassword: passwordSchema,
+  confirmPassword: confirmPasswordSchema,
+});
+export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
+
