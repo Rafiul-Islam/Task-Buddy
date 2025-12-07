@@ -4,11 +4,11 @@ import com.taskbuddy.dtos.auth.*;
 import com.taskbuddy.entities.User;
 import com.taskbuddy.exeptions.NotFoundException;
 import com.taskbuddy.mappers.UserMapper;
-import com.taskbuddy.repositories.UserRepository;
 import com.taskbuddy.utils.JwtUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Tag(name = "Authentication")
@@ -27,6 +28,7 @@ public class AuthService {
   private final JwtService jwtService;
   private final JwtUtils jwtUtils;
   private final UserMapper userMapper;
+  private final PasswordResetEmailService passwordResetEmailService;
 
   @Value("${app.frontend-url}")
   String frontendUrl;
@@ -36,6 +38,12 @@ public class AuthService {
   }
 
   private boolean sendResetPasswordEmail(String email, String token) {
+    try {
+      passwordResetEmailService.sendPasswordResetEmail(email, "TaskBuddy", generateResetPasswordLink(token));
+    } catch (Exception e) {
+      log.error("Failed to send reset password email", e);
+      return false;
+    }
     return true;
   }
 
@@ -77,9 +85,8 @@ public class AuthService {
     Optional<User> user = userService.getUserByEmail(request.getEmail());
     if (user.isEmpty()) return;
     String token = jwtUtils.generateResetPasswordToken(user.get().getEmail());
-    System.out.println(generateResetPasswordLink(token));
     boolean isEmailSent = sendResetPasswordEmail(request.getEmail(), token);
     if (!isEmailSent) throw new RuntimeException("Failed to send email");
-    System.out.println("Email sent successfully");
+    log.info("Email sent successfully");
   }
 }
