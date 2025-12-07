@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface ResetPasswordRecordsRepository extends JpaRepository<ResetPasswordRecords, Long> {
   Optional<ResetPasswordRecords> findByUserEmail(String userEmail);
   Optional<ResetPasswordRecords> findByToken(String token);
+  void deleteByToken(String token);
 }

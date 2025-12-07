@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -32,12 +33,18 @@ public class AuthService {
   private final UserMapper userMapper;
   private final PasswordResetEmailService passwordResetEmailService;
   private final ResetPasswordRecordsService resetPasswordRecordsService;
+  private final PasswordEncoder passwordEncoder;
+
 
   @Value("${app.frontend-url}")
   String frontendUrl;
 
   @Value("${app.jwt.reset-token-expiration-in-ms}")
   long resetPasswordTokenExpiryTimeInMs;
+
+  private void validatePasswordsEquality(String password, String confirmPassword) {
+    if (!password.equals(confirmPassword)) throw new IllegalArgumentException("Passwords do not match");
+  }
 
   private String generateResetPasswordLink(String token) {
     return frontendUrl + "/auth/reset-password?reset-password-token=" + token;
@@ -105,7 +112,7 @@ public class AuthService {
     log.info("Email sent successfully");
   }
 
-  public void validateResetPasswordLink(ResetPasswordLinkValidateRequest request) {
+  public void validateResetPasswordToken(ResetPasswordLinkValidateRequest request) {
     try {
       String email = jwtUtils.validateAndExtractEmail(request.getToken());
       ResetPasswordRecords resetPasswordRecords = resetPasswordRecordsService.getByToken(request.getToken())
@@ -118,5 +125,20 @@ public class AuthService {
     } catch (Exception e) {
       throw new BadCredentialsException("Invalid reset password token");
     }
+  }
+
+  @Transactional
+  public void resetPassword(ResetPasswordRequest request) {
+    validatePasswordsEquality(request.getNewPassword(), request.getConfirmPassword());
+
+    ResetPasswordLinkValidateRequest resetPasswordLinkValidateRequest = new ResetPasswordLinkValidateRequest();
+    resetPasswordLinkValidateRequest.setToken(request.getToken());
+    validateResetPasswordToken(resetPasswordLinkValidateRequest);
+
+    String userEmail = jwtUtils.validateAndExtractEmail(request.getToken());
+    User existingUser = userService.getUserByEmail(userEmail).orElseThrow(() -> new BadCredentialsException("Invalid reset password token"));
+    existingUser.setPassword(passwordEncoder.encode(request.getNewPassword()));
+    userService.save(existingUser);
+    resetPasswordRecordsService.deleteByToken(request.getToken());
   }
 }

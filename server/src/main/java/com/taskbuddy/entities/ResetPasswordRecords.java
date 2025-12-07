@@ -20,7 +20,7 @@ public class ResetPasswordRecords extends BaseEntity {
   @Column(name = "user_email")
   private String userEmail;
 
-  @Column(name = "token")
+  @Column(name = "token", unique = true)
   private String token;
 
   @Column(name = "expires_at")

@@ -55,8 +55,15 @@ public class AuthController {
   @PostMapping("/validate-reset-password-link")
   @Operation(summary = "Validate a user's reset password link")
   public ResponseEntity<ApiResponse<Void>> validateResetPasswordLink(@Valid @RequestBody ResetPasswordLinkValidateRequest request) {
-    authService.validateResetPasswordLink(request);
+    authService.validateResetPasswordToken(request);
     return ApiResponseBuilder.success(HttpStatus.OK, "Reset password link is valid", null);
+  }
+
+  @PostMapping("/reset-password")
+  @Operation(summary = "Reset a user's password")
+  public ResponseEntity<ApiResponse<Void>> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+    authService.resetPassword(request);
+    return ApiResponseBuilder.success(HttpStatus.OK, "Password reset successfully", null);
   }
 
 }

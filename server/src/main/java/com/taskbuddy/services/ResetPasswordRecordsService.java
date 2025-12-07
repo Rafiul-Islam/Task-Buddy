@@ -25,7 +25,7 @@ public class ResetPasswordRecordsService {
     return resetPasswordRecordsRepository.save(resetPasswordRecords);
   }
 
-  public void delete(ResetPasswordRecords resetPasswordRecords) {
-    resetPasswordRecordsRepository.delete(resetPasswordRecords);
+  public void deleteByToken(String token) {
+    resetPasswordRecordsRepository.deleteByToken(token);
   }
 }
