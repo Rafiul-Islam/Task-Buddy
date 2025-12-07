@@ -7,3 +7,12 @@ spring:
     additional-location: classpath:/
   profiles:
     active: dev
+
+app:
+  supported-http-methods:
+    -GET
+    -POST
+    -PUT
+    -PATCH
+    -DELETE
+    -OPTIONS
