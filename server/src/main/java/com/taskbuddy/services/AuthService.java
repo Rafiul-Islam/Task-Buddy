@@ -127,9 +127,7 @@ public class AuthService {
     resetPasswordRecordsService.save(record);
 
     // 4. Send email
-    if (!sendResetPasswordEmail(email, token)) {
-      throw new RuntimeException("Failed to send email");
-    }
+    sendResetPasswordEmail(email, token);
 
     log.info("Password reset email sent to {}", email);
   }
