@@ -12,8 +12,8 @@ import java.util.List;
 @Configuration
 public class CorsConfig {
 
-  @Value("${app.frontend.urls}")
-  private List<String> frontendUrls;
+  @Value("${app.frontend-url}")
+  private String frontendUrl;
 
   @Value("${app.supported-http-methods}")
   private List<String> supportedHttpMethods;
@@ -21,7 +21,7 @@ public class CorsConfig {
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(frontendUrls);
+    configuration.setAllowedOrigins(List.of(frontendUrl));
     configuration.setAllowedMethods(supportedHttpMethods);
     configuration.setAllowedHeaders(List.of("*"));
     configuration.setAllowCredentials(true); // If you need cookies/auth headers

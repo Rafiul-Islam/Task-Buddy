@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  jwt:
+    secret: ${JWT_SECRET}
+    accessTokenExpirationTime: ${JWT_ACCESS_TOKEN_EXPIRED_IN_MS}
+    refreshTokenExpirationTime: ${JWT_REFRESH_TOKEN_EXPIRED_IN_MS}
+  config:
+    additional-location: classpath:/
+
+server:
+  port: 8081
+
+app:
+  jwt:
+    reset-password-token-secret-key: ${JWT_RESET_PASSWORD_SECRET_KEY}
+    reset-token-expiration-in-ms: ${JWT_RESET_PASSWORD_TOKEN_EXPIRED_IN_MS}
+  frontend-url: ${APP_FRONTEND_LOCAL_BASE_URL}
+  supported-http-methods:
+    - GET
+    - POST
+    - PUT
+    - PATCH
+    - DELETE
+    - OPTIONS
