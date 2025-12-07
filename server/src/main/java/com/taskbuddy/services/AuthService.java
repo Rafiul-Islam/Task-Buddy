@@ -9,10 +9,13 @@ import com.taskbuddy.utils.JwtUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,10 +24,20 @@ public class AuthService {
 
   private final UserService userService;
   private final AuthenticationManager authenticationManager;
-  private final UserRepository userRepository;
   private final JwtService jwtService;
   private final JwtUtils jwtUtils;
   private final UserMapper userMapper;
+
+  @Value("${app.frontend-url}")
+  String frontendUrl;
+
+  private String generateResetPasswordLink(String token) {
+    return frontendUrl + "/auth/reset-password?reset-password-token=" + token;
+  }
+
+  private boolean sendResetPasswordEmail(String email, String token) {
+    return true;
+  }
 
   public void register(RegistrationRequest request) {
     userService.save(request);
@@ -37,8 +50,7 @@ public class AuthService {
         loginRequest.getPassword()
       )
     );
-    User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new NotFoundException("User not found"));
-
+    User user = userService.getUserByEmail(loginRequest.getEmail()).orElseThrow(() -> new NotFoundException("User not found"));
 
     var accessToken = jwtService.generateAccessToken(user).toString();
     var refreshToken = jwtService.generateRefreshToken(user).toString();
@@ -56,13 +68,18 @@ public class AuthService {
 
 
     var userId = jwt.getUserId();
-    var user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
+    var user = userService.getUserById(userId).orElseThrow(() -> new NotFoundException("User not found"));
 
     return jwtService.generateAccessToken(user).toString();
   }
 
-  public String forgotPassword(@Valid ResetPasswordRequest request) {
-    var user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new NotFoundException("User not found"));
-    return jwtUtils.generateResetPasswordToken(user.getEmail());
+  public void forgotPassword(@Valid ResetPasswordRequest request) {
+    Optional<User> user = userService.getUserByEmail(request.getEmail());
+    if (user.isEmpty()) return;
+    String token = jwtUtils.generateResetPasswordToken(user.get().getEmail());
+    System.out.println(generateResetPasswordLink(token));
+    boolean isEmailSent = sendResetPasswordEmail(request.getEmail(), token);
+    if (!isEmailSent) throw new RuntimeException("Failed to send email");
+    System.out.println("Email sent successfully");
   }
 }

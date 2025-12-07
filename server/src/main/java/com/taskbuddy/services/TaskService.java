@@ -41,7 +41,7 @@ public class TaskService {
   @Transactional
   public Task save(TaskCreatingRequest request) {
     Long userId = jwtUtils.getCurrentUserId();
-    User user = userService.getUserById(userId);
+    User user = userService.getUserById(userId).orElseThrow(() -> new NotFoundException("User not found"));
 
     Task taskEntity = taskMapper.toEntity(request);
     taskEntity.setUser(user);

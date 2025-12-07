@@ -47,9 +47,9 @@ public class AuthController {
 
   @PostMapping("/forgot-password")
   @Operation(summary = "Reset a user's password")
-  public ResponseEntity<ApiResponse<String>> forgotPassword(@Valid @RequestBody ResetPasswordRequest request) {
-    String resetToken = authService.forgotPassword(request);
-    return ApiResponseBuilder.success(HttpStatus.OK, "An email has been sent to your email address with a reset password link", resetToken);
+  public ResponseEntity<ApiResponse<Void>> forgotPassword(@Valid @RequestBody ResetPasswordRequest request) {
+    authService.forgotPassword(request);
+    return ApiResponseBuilder.success(HttpStatus.OK, "If any user registered with this email, an email has been sent to this email address with a reset password link", null);
   }
 
 }
