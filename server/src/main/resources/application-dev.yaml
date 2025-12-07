@@ -31,7 +31,15 @@ server:
   port: 8081
 
 app:
+  frontend-url: ${APP_FRONTEND_LOCAL_BASE_URL}
+  supported-http-methods:
+    -GET
+    -POST
+    -PUT
+    -PATCH
+    -DELETE
+    -OPTIONS
+    -HEAD
   jwt:
     reset-password-token-secret-key: ${JWT_RESET_PASSWORD_SECRET_KEY}
     reset-token-expiration-in-ms: ${JWT_RESET_PASSWORD_TOKEN_EXPIRED_IN_MS}
-  frontend-url: ${APP_FRONTEND_LOCAL_BASE_URL}

@@ -35,7 +35,6 @@ public class AuthService {
   private final ResetPasswordRecordsService resetPasswordRecordsService;
   private final PasswordEncoder passwordEncoder;
 
-
   @Value("${app.frontend-url}")
   String frontendUrl;
 
@@ -47,7 +46,7 @@ public class AuthService {
   }
 
   private String generateResetPasswordLink(String token) {
-    return frontendUrl + "/auth/reset-password?reset-password-token=" + token;
+    return frontendUrl + "/reset-password?reset-password-token=" + token;
   }
 
   private boolean sendResetPasswordEmail(String email, String token) {
