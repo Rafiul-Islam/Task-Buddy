@@ -47,3 +47,8 @@ export const signupSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
 });
+
+export const forgotPasswordSchema = z.object({
+  email: emailSchema,
+});
+export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
