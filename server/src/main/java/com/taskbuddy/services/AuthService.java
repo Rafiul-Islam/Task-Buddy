@@ -98,18 +98,40 @@ public class AuthService {
   public void forgotPassword(ForgotPasswordRequest request) {
     Optional<User> user = userService.getUserByEmail(request.getEmail());
     if (user.isEmpty()) return;
-    String token = jwtUtils.generateResetPasswordToken(user.get().getEmail());
 
-    ResetPasswordRecords resetPasswordRecords = ResetPasswordRecords.builder()
+    String email = user.get().getEmail();
+
+    Optional<ResetPasswordRecords> existing = resetPasswordRecordsService.getByEmail(email);
+
+    // 1. If existing and still valid (not expired) → block resend
+    if (existing.isPresent() && existing.get().getExpiresAt().isAfter(LocalDateTime.now())) {
+      throw new BadCredentialsException("A reset email has already been sent.");
+    }
+
+    // 2. If expired → delete old record
+    existing.ifPresent(record -> {
+      if (record.getExpiresAt().isBefore(LocalDateTime.now())) {
+        resetPasswordRecordsService.deleteByToken(record.getToken());
+      }
+    });
+
+    // 3. Generate new token
+    String token = jwtUtils.generateResetPasswordToken(email);
+
+    ResetPasswordRecords record = ResetPasswordRecords.builder()
       .token(token)
-      .userEmail(user.get().getEmail())
+      .userEmail(email)
       .expiresAt(LocalDateTime.now().plusSeconds(resetPasswordTokenExpiryTimeInMs / 1000))
       .build();
-    resetPasswordRecordsService.save(resetPasswordRecords);
 
-    boolean isEmailSent = sendResetPasswordEmail(request.getEmail(), token);
-    if (!isEmailSent) throw new RuntimeException("Failed to send email");
-    log.info("Email sent successfully");
+    resetPasswordRecordsService.save(record);
+
+    // 4. Send email
+    if (!sendResetPasswordEmail(email, token)) {
+      throw new RuntimeException("Failed to send email");
+    }
+
+    log.info("Password reset email sent to {}", email);
   }
 
   public void validateResetPasswordToken(ResetPasswordLinkValidateRequest request) {
