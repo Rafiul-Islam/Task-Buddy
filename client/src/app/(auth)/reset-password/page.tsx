@@ -21,9 +21,7 @@ const ResetPasswordPage = () => {
   const router = useRouter();
 
   const searchParams = useSearchParams();
-  const token = searchParams.get("reset-password-token");
-
-  if (!token) return <div>Invalid token</div>;
+  const token = searchParams.get("reset-password-token") || "";
 
   const {
     validateToken,
@@ -31,8 +29,6 @@ const ResetPasswordPage = () => {
   } = useResetPassword();
 
   useEffect(() => {
-    if (!token) return;
-
     validateToken.mutate(
       {token},
       {
@@ -43,7 +39,7 @@ const ResetPasswordPage = () => {
         }
       }
     );
-  }, [token]);
+  }, [validateToken, token]);
 
   const {
     register,

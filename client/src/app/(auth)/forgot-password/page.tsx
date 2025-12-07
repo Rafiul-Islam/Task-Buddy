@@ -48,7 +48,7 @@ const ForgotPasswordPage = () => {
               Forgot Password
             </CardTitle>
             <CardDescription className="text-center text-gray-600 w-2/3 mx-auto">
-              Enter your email address and we'll send you a link to reset your password.
+              Enter your email address and we will send you a link to reset your password.
             </CardDescription>
           </CardHeader>
 
