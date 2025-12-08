@@ -39,7 +39,7 @@ const ResetPasswordPage = () => {
         }
       }
     );
-  }, [validateToken, token]);
+  }, [token]);
 
   const {
     register,

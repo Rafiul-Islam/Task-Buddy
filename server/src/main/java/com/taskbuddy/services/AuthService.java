@@ -55,6 +55,7 @@ public class AuthService {
   private boolean sendResetPasswordEmail(String email, String token) {
     try {
       passwordResetEmailService.sendPasswordResetEmail(email, "TaskBuddy", generateResetPasswordLink(token));
+      log.info("Reset password email sent to {}", email);
     } catch (Exception e) {
       log.error("Failed to send reset password email", e);
       return false;
@@ -133,7 +134,6 @@ public class AuthService {
 
     // 4. Send email
     sendResetPasswordEmail(email, token);
-    log.info("Reset password email sent to {}", email);
   }
 
   public void validateResetPasswordToken(ResetPasswordLinkValidateRequest request) {
