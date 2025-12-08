@@ -1,16 +1,15 @@
 package com.taskbuddy.services;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
+
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 @Slf4j
 @Service
@@ -40,7 +39,12 @@ public class PasswordResetEmailService {
     mailSender.send(message);
   }
 
+  @Value("classpath:/templates/password-reset-email.html")
+  private org.springframework.core.io.Resource templateResource;
+
   private String loadHtmlTemplate() throws IOException {
-    return new String(Files.readAllBytes(Paths.get("src/main/resources/templates/password-reset-email.html")));
+    try (java.io.InputStream inputStream = templateResource.getInputStream()) {
+      return new String(inputStream.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+    }
   }
 }
