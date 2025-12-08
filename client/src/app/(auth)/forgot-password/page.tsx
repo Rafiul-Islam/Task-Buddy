@@ -10,19 +10,20 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {MailIcon} from "lucide-react";
 import SubmitButton from "@/components/SubmitButton";
 import useForgotPassword from "@/hooks/useForgotPassword";
+import Link from "next/link";
 
 const ForgotPasswordPage = () => {
 
-  const {isPending, mutate, reset} = useForgotPassword();
+  const {isPending, mutate} = useForgotPassword();
 
-  const {register, handleSubmit, formState: {errors}} = useForm<ForgotPasswordFormData>({
+  const {register, handleSubmit, formState: {errors}, reset} = useForm<ForgotPasswordFormData>({
     resolver: zodResolver(forgotPasswordSchema)
   });
 
   const onSubmit = (data: ForgotPasswordFormData) => {
     mutate(data, {
       onSuccess: () => {
-        reset()
+        reset();
       }
     });
   }
@@ -73,6 +74,12 @@ const ForgotPasswordPage = () => {
                 disabled={isPending}
               />
             </form>
+            <div className='mt-5 flex items-center gap-2'>
+              <p>Already have an account?</p>
+              <Link className="text-green-600 hover:underline" href="/signin">
+                Login
+              </Link>
+            </div>
           </CardContent>
         </Card>
       </div>
