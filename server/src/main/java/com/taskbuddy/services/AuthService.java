@@ -42,7 +42,10 @@ public class AuthService {
   long resetPasswordTokenExpiryTimeInMs;
 
   private void validatePasswordsEquality(String password, String confirmPassword) {
-    if (!password.equals(confirmPassword)) throw new IllegalArgumentException("Passwords do not match");
+    if (!password.equals(confirmPassword)) {
+      log.error("'{}' and '{}' Passwords do not match", password, confirmPassword);
+      throw new IllegalArgumentException("Passwords do not match");
+    }
   }
 
   private String generateResetPasswordLink(String token) {
@@ -61,6 +64,7 @@ public class AuthService {
 
   public void register(RegistrationRequest request) {
     userService.save(request);
+    log.info("User ({}) registration successful", request.getEmail());
   }
 
   public LoginResponse login(LoginRequest loginRequest) {
@@ -104,6 +108,7 @@ public class AuthService {
 
     // 1. If existing and still valid (not expired) → block resend
     if (existing.isPresent() && existing.get().getExpiresAt().isAfter(LocalDateTime.now())) {
+      log.info("A reset email has already been sent to {}", email);
       throw new BadCredentialsException("A reset email has already been sent.");
     }
 
@@ -111,12 +116,12 @@ public class AuthService {
     existing.ifPresent(record -> {
       if (record.getExpiresAt().isBefore(LocalDateTime.now())) {
         resetPasswordRecordsService.deleteByToken(record.getToken());
+        log.info("Reset password record expired for {}", email);
       }
     });
 
     // 3. Generate new token
     String token = jwtUtils.generateResetPasswordToken(email);
-
     ResetPasswordRecords record = ResetPasswordRecords.builder()
       .token(token)
       .userEmail(email)
@@ -124,11 +129,11 @@ public class AuthService {
       .build();
 
     resetPasswordRecordsService.save(record);
+    log.info("New reset password record created for {}", email);
 
     // 4. Send email
     sendResetPasswordEmail(email, token);
-
-    log.info("Password reset email sent to {}", email);
+    log.info("Reset password email sent to {}", email);
   }
 
   public void validateResetPasswordToken(ResetPasswordLinkValidateRequest request) {
@@ -136,12 +141,15 @@ public class AuthService {
       String email = jwtUtils.validateAndExtractEmail(request.getToken());
       ResetPasswordRecords resetPasswordRecords = resetPasswordRecordsService.getByToken(request.getToken())
         .orElseThrow(() -> new NotFoundException("Reset password record not found"));
+      log.info("Reset password record found for {}", email);
 
       if (!resetPasswordRecords.getUserEmail().equals(email) || !resetPasswordRecords.getToken().equals(request.getToken())) {
+        log.error("Token {} or email {} does not match", request.getToken(), email);
         throw new BadCredentialsException("Invalid Reset password token");
       }
 
     } catch (Exception e) {
+      log.error("Invalid reset password token", e);
       throw new BadCredentialsException("Invalid reset password token");
     }
   }
@@ -149,15 +157,20 @@ public class AuthService {
   @Transactional
   public void resetPassword(ResetPasswordRequest request) {
     validatePasswordsEquality(request.getNewPassword(), request.getConfirmPassword());
+    log.info("Passwords validated successfully");
 
     ResetPasswordLinkValidateRequest resetPasswordLinkValidateRequest = new ResetPasswordLinkValidateRequest();
     resetPasswordLinkValidateRequest.setToken(request.getToken());
     validateResetPasswordToken(resetPasswordLinkValidateRequest);
+    log.info("Reset password token validated successfully");
 
     String userEmail = jwtUtils.validateAndExtractEmail(request.getToken());
     User existingUser = userService.getUserByEmail(userEmail).orElseThrow(() -> new BadCredentialsException("Invalid reset password token"));
     existingUser.setPassword(passwordEncoder.encode(request.getNewPassword()));
     userService.save(existingUser);
+    log.info("Password reset successfully for {}", userEmail);
+
     resetPasswordRecordsService.deleteByToken(request.getToken());
+    log.info("Reset password record deleted for {}", userEmail);
   }
 }

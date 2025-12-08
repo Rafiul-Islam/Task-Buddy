@@ -10,10 +10,12 @@ import com.taskbuddy.repositories.TaskRepository;
 import com.taskbuddy.utils.JwtUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class TaskService {
@@ -46,19 +48,24 @@ public class TaskService {
     Task taskEntity = taskMapper.toEntity(request);
     taskEntity.setUser(user);
 
-    return taskRepository.save(taskEntity);
+    Task response = taskRepository.save(taskEntity);
+    log.info("Task created successfully with taskID: {} for userID: {}", response.getId(), userId);
+    return response;
   }
 
   public Task update(Long id, TaskCreatingRequest request) {
     Task existingTask = findById(id);
     validateAuthorizationToAccessTheTask(existingTask);
     Task updatedTask = taskMapper.convertTo(request, existingTask);
-    return taskRepository.save(updatedTask);
+    Task response = taskRepository.save(updatedTask);
+    log.info("Task updated successfully for task ID: {}", id);
+    return response;
   }
 
   public void delete(Long id) {
     Task existingTask = findById(id);
     validateAuthorizationToAccessTheTask(existingTask);
     taskRepository.delete(existingTask);
+    log.info("Task deleted successfully for task ID: {}", id);
   }
 }
