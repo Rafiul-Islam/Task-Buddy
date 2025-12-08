@@ -37,10 +37,7 @@ public class PasswordResetEmailService {
     helper.setSubject("TaskBuddy password Reset Instructions");
     helper.setText(htmlContent, true);
 
-
     mailSender.send(message);
-    log.debug("Password reset email sent from {}", FROM_EMAIL);
-    log.info("Password reset email sent to {}", toEmail);
   }
 
   private String loadHtmlTemplate() throws IOException {

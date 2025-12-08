@@ -16,10 +16,6 @@ spring:
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
     driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
   jwt:
     secret: ${JWT_SECRET}
     accessTokenExpirationTime: ${JWT_ACCESS_TOKEN_EXPIRED_IN_MS}

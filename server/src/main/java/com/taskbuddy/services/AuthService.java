@@ -52,15 +52,14 @@ public class AuthService {
     return frontendUrl + "/reset-password?reset-password-token=" + token;
   }
 
-  private boolean sendResetPasswordEmail(String email, String token) {
+  private void sendResetPasswordEmail(String email, String token) {
     try {
       passwordResetEmailService.sendPasswordResetEmail(email, "TaskBuddy", generateResetPasswordLink(token));
-      log.info("Reset password email sent to {}", email);
+      log.info("Password reset email sent to {}", email);
     } catch (Exception e) {
       log.error("Failed to send reset password email", e);
-      return false;
+      throw new RuntimeException("Failed to send reset password email with");
     }
-    return true;
   }
 
   public void register(RegistrationRequest request) {
@@ -101,7 +100,10 @@ public class AuthService {
   @Transactional
   public void forgotPassword(ForgotPasswordRequest request) {
     Optional<User> user = userService.getUserByEmail(request.getEmail());
-    if (user.isEmpty()) return;
+    if (user.isEmpty()) {
+      log.error("User not found for email {}", request.getEmail());
+      return;
+    }
 
     String email = user.get().getEmail();
 
@@ -116,8 +118,9 @@ public class AuthService {
     // 2. If expired → delete old record
     existing.ifPresent(record -> {
       if (record.getExpiresAt().isBefore(LocalDateTime.now())) {
-        resetPasswordRecordsService.deleteByToken(record.getToken());
         log.info("Reset password record expired for {}", email);
+        resetPasswordRecordsService.deleteByToken(record.getToken());
+        log.info("Reset password record deleted for {}", email);
       }
     });
 

@@ -2,6 +2,8 @@ spring:
   application:
     name: TaskBuddy
   jpa:
+    hibernate:
+      ddl-auto: update
     show-sql: true
   config:
     additional-location: classpath:/
