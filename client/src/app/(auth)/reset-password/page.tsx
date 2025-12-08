@@ -14,29 +14,35 @@ import PasswordInput from "@/components/PasswordInputField";
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
 import {toast} from "react-toastify";
+import Loader from "@/components/Loader";
 
 const ResetPasswordPage = () => {
   const [isTokenValid, setIsTokenValid] = useState(false);
   const [tokenError, setTokenError] = useState("");
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
 
   const searchParams = useSearchParams();
   const token = searchParams.get("reset-password-token") || "";
 
   const {
     validateToken,
-    resetPassword: {isPending, mutate: resetPassword}
+    resetPassword: {isPending, mutate: resetPassword},
   } = useResetPassword();
 
   useEffect(() => {
     validateToken.mutate(
       {token},
       {
-        onSuccess: () => setIsTokenValid(true),
+        onSuccess: () => {
+          setIsTokenValid(true);
+          setLoading(false);
+        },
         onError: (error) => {
           setIsTokenValid(false);
           setTokenError(error.message);
-        }
+          setLoading(false);
+        },
       }
     );
   }, [token]);
@@ -63,6 +69,7 @@ const ResetPasswordPage = () => {
     );
   };
 
+  if (loading) return <Loader fullScreen/>
   return (
     <div
       className="min-h-screen flex items-center justify-center p-3"
