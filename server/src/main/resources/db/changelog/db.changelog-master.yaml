@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: Initial_table_creation_query
+      author: rafi
+      changes:
+        - sqlFile:
+            path: db/changelog/data/V1__Initial_table_creation_query.sql

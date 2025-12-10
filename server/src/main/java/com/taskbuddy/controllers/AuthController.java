@@ -28,7 +28,21 @@ public class AuthController {
   @Operation(summary = "Register a new user")
   public ResponseEntity<ApiResponse<Void>> register(@RequestBody @Valid RegistrationRequest request) {
     authService.register(request);
-    return ApiResponseBuilder.success(HttpStatus.CREATED, "User registered successfully", null);
+    return ApiResponseBuilder.success(HttpStatus.CREATED, "An email has been sent to this email address with a verification link.", null);
+  }
+
+  @PostMapping("/validate-signup-user-verification-link")
+  @Operation(summary = "Validate a user's reset password link")
+  public ResponseEntity<ApiResponse<Void>> validateSignupUserVerificationLink(@Valid @RequestBody SignupUserVerificationLinkValidateRequest request) {
+    authService.validateSignupUserVerificationToken(request);
+    return ApiResponseBuilder.success(HttpStatus.OK, "Signup user verification link is valid", null);
+  }
+
+  @PostMapping("/login-with-email-verification-token")
+  @Operation(summary = "Login a user")
+  public ResponseEntity<ApiResponse<LoginResponse>> loginWithEmailVerificationToken(@Valid @RequestBody LoginWithEmailVerificationTokenRequest request) {
+    LoginResponse response = authService.loginWithUserVerificationToken(request);
+    return ApiResponseBuilder.success(HttpStatus.OK, "Now you are a verified user", response);
   }
 
   @PostMapping("/login")

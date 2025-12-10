@@ -2,10 +2,11 @@ spring:
   application:
     name: TaskBuddy
   jpa:
-    hibernate:
-      ddl-auto: update
     show-sql: true
   config:
     additional-location: classpath:/
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: true
   profiles:
-    active: prod
+    active: dev

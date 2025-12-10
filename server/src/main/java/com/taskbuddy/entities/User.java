@@ -27,6 +27,9 @@ public class User extends BaseEntity {
   @Column(name = "password", nullable = false)
   private String password;
 
+  @Column(name = "is_verified", nullable = false)
+  private boolean isVerified;
+
   @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
   private List<Task> tasks = new ArrayList<>();
 }

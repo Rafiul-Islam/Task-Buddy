@@ -8,7 +8,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 import javax.crypto.SecretKey;
-import java.security.Key;
 
 @Configuration
 @ConfigurationProperties(prefix = "spring.jwt")
@@ -21,12 +20,20 @@ public class JwtConfig {
   @Value("${app.jwt.reset-password-token-secret-key}")
   String RESET_PASSWORD_TOKEN_SECRET_KEY;
 
+  @Value("${app.jwt.signup-user-verification-token-secret-key}")
+  String SIGNUP_USER_VERIFICATION_TOKEN_SECRET_KEY;
+
   public SecretKey getSecret() {
     return Keys.hmacShaKeyFor(secret.getBytes());
   }
 
-  public SecretKey getSignInKey() {
+  public SecretKey getSignInKeyForResetPassword() {
     byte[] keyBytes = Decoders.BASE64.decode(RESET_PASSWORD_TOKEN_SECRET_KEY);
+    return Keys.hmacShaKeyFor(keyBytes);
+  }
+
+  public SecretKey getSignInKeyForSignupUserVerification() {
+    byte[] keyBytes = Decoders.BASE64.decode(SIGNUP_USER_VERIFICATION_TOKEN_SECRET_KEY);
     return Keys.hmacShaKeyFor(keyBytes);
   }
 }

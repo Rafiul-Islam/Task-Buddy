@@ -24,6 +24,9 @@ public class JwtUtils {
   @Value("${app.jwt.reset-token-expiration-in-ms}")
   String RESET_TOKEN_EXPIRATION;
 
+  @Value("${app.jwt.signup-user-verification-token-expiration-in-ms}")
+  String SIGNUP_USER_VERIFICATION_TOKEN_EXPIRATION;
+
   private String getCurrentToken() {
     String authHeader = request.getHeader("Authorization");
     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -62,13 +65,31 @@ public class JwtUtils {
       .subject(email)
       .issuedAt(new Date())
       .expiration(new Date(System.currentTimeMillis() + Long.parseLong(RESET_TOKEN_EXPIRATION)))
-      .signWith(jwtConfig.getSignInKey(), SignatureAlgorithm.HS256)
+      .signWith(jwtConfig.getSignInKeyForResetPassword(), SignatureAlgorithm.HS256)
       .compact();
   }
 
-  public String validateAndExtractEmail(String token) {
+  public String generateSignupUserVerificationToken(String email) {
+    return Jwts.builder()
+      .subject(email)
+      .issuedAt(new Date())
+      .expiration(new Date(System.currentTimeMillis() + Long.parseLong(SIGNUP_USER_VERIFICATION_TOKEN_EXPIRATION)))
+      .signWith(jwtConfig.getSignInKeyForResetPassword(), SignatureAlgorithm.HS256)
+      .compact();
+  }
+
+  public String validateAndExtractEmailForResetPasswordToken(String token) {
     return Jwts.parser()
-      .verifyWith(jwtConfig.getSignInKey())
+      .verifyWith(jwtConfig.getSignInKeyForResetPassword())
+      .build()
+      .parseSignedClaims(token)
+      .getPayload()
+      .getSubject();
+  }
+
+  public String validateAndExtractEmailForSignupUserVerificationToken(String token) {
+    return Jwts.parser()
+      .verifyWith(jwtConfig.getSignInKeyForResetPassword())
       .build()
       .parseSignedClaims(token)
       .getPayload()

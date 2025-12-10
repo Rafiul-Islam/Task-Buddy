@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup User Verification</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .button {
+      display: inline-block;
+      padding: 12px 24px;
+      background-color: #007bff;
+      color: white !important;
+      text-decoration: none;
+      border-radius: 4px;
+      margin: 20px 0;
+    }
+    .button:hover {
+      background-color: #0056b3;
+    }
+    .code-block {
+      background-color: #f4f4f4;
+      padding: 15px;
+      border-radius: 4px;
+      border-left: 4px solid #007bff;
+      margin: 15px 0;
+      overflow-wrap: break-word;
+      word-break: break-all;
+    }
+    code {
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <p>Hi {{userName}},</p>
+
+  <p>Welcome to our service! To complete your signup and verify your email address, please click the button below:</p>
+
+  <a href="{{userVerificationLink}}" class="button">Verify Email</a>
+
+  <p>If the button doesn’t work, you can copy and paste the link below into your browser:</p>
+
+  <div class="code-block">
+    <code>{{userVerificationLink}}</code>
+  </div>
+
+  <p>Thank you for joining us!</p>
+</div>
+</body>
+</html>

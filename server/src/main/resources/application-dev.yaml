@@ -39,3 +39,5 @@ app:
   jwt:
     reset-password-token-secret-key: ${JWT_RESET_PASSWORD_SECRET_KEY}
     reset-token-expiration-in-ms: ${JWT_RESET_PASSWORD_TOKEN_EXPIRED_IN_MS}
+    signup-user-verification-token-secret-key: ${JWT_SIGNUP_USER_VERIFICATION_TOKEN_SECRET_KEY}
+    signup-user-verification-token-expiration-in-ms: ${JWT_SIGNUP_USER_VERIFICATION_TOKEN_EXPIRED_IN_MS}

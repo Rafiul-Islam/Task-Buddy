@@ -61,7 +61,6 @@ public class UserService {
   }
 
   public void delete(Long id) {
-    validateAuthorization(id);
     User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
     userRepository.delete(user);
     log.info("User with email {} deleted successfully", user.getEmail());
