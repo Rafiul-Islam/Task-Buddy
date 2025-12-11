@@ -40,6 +40,7 @@ export const fullnameSchema = z
 export const signinSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
+  token: z.string().trim().optional(),
 });
 
 export const signupSchema = z.object({

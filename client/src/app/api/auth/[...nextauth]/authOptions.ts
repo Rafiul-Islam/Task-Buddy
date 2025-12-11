@@ -1,4 +1,4 @@
-import { NextAuthOptions, Session } from "next-auth";
+import {NextAuthOptions, Session} from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import {httpClient} from "@/lib/http-client";
 import {
@@ -7,7 +7,7 @@ import {
   ERROR_TYPE_TO_FORCE_LOGOUT,
   ApiResponse,
 } from "@/types/auth";
-import { JWT } from "next-auth/jwt";
+import {JWT} from "next-auth/jwt";
 import {
   AUTH_API_ENDPOINTS,
   AUTH_MESSAGES,
@@ -32,7 +32,9 @@ function getJwtExpiry(token: string): number | null {
 
 async function refreshAccessToken(token: JWT): Promise<JWT> {
   try {
-    const { data } = await httpClient.post<ApiResponse<{ accessToken: string }>>(AUTH_API_ENDPOINTS.REFRESH, {refreshToken: token.refreshToken});
+    const {data} = await httpClient.post<ApiResponse<{
+      accessToken: string
+    }>>(AUTH_API_ENDPOINTS.REFRESH, {refreshToken: token.refreshToken});
     const newAccessToken = data?.payload?.accessToken;
     return {
       ...token,
@@ -69,19 +71,17 @@ const authOptions: NextAuthOptions = {
       credentials: {},
       authorize: async (credentials) => {
         try {
-          const { email, password } = credentials as Credential;
+          const {email, password, token} = credentials as Credential;
           if (!email || !password)
             throw new Error(AUTH_MESSAGES.SIGN_IN.FAILURE);
 
-          const { data } = await httpClient.post<
-            ApiResponse<CustomUser>
-          >(AUTH_API_ENDPOINTS.SIGN_IN.CREDENTIALS, {
-            email,
-            password,
-          });
+          const requestEndpoint = token ? AUTH_API_ENDPOINTS.SIGN_IN.CREDENTIALS_WITH_TOKEN : AUTH_API_ENDPOINTS.SIGN_IN.CREDENTIALS;
+          const requestBody = token ? {email, password, token} : {email, password};
+
+          const {data} = await httpClient.post<ApiResponse<CustomUser>>(requestEndpoint, requestBody);
           const user = data?.payload;
           if (!user) return null;
-          return { ...user, id: String(user.id), userId: user.id };
+          return {...user, id: String(user.id), userId: user.id};
         } catch (err: unknown) {
           if (axios.isAxiosError(err)) {
             const message = (
@@ -98,7 +98,7 @@ const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user, trigger, session }): Promise<JWT> {
+    async jwt({token, user, trigger, session}): Promise<JWT> {
       // --- Handle session update trigger ---
       if (trigger === "update" && session?.user) {
         return {
@@ -145,7 +145,7 @@ const authOptions: NextAuthOptions = {
         };
       }
     },
-    async session({ session, token }: { session: Session; token: JWT }) {
+    async session({session, token}: { session: Session; token: JWT }) {
       session.user = {
         ...session.user,
         userId: token.userId,
@@ -162,7 +162,7 @@ const authOptions: NextAuthOptions = {
 
       return session;
     },
-    async redirect({ url, baseUrl }) {
+    async redirect({url, baseUrl}) {
       // Allow relative callback URLs
       if (url.startsWith("/")) return `${baseUrl}${url}`;
       // Allow callback URLs on the same origin

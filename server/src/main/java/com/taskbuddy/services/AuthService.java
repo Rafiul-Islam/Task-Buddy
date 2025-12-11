@@ -59,7 +59,7 @@ public class AuthService {
   }
 
   private String generateSignupUserVerificationLink(String token) {
-    return frontendUrl + "/login?email-verification-token=" + token;
+    return frontendUrl + "/signin?email-verification-token=" + token;
   }
 
   private void sendResetPasswordEmail(String email, String token) {

@@ -17,10 +17,11 @@ type LoginResult = {
 };
 
 export const doCredentialLogin = async ({data}: { data: SigninData}): Promise<LoginResult> => {
-  const { email, password } = data;
+  const { email, password,token } = data;
   const result = await signIn(AUTH_PROVIDERS.CREDENTIALS.TYPE, {
     email,
     password,
+    token,
     redirect: false,
     callbackUrl: AUTH_ROUTES.SIGN_IN,
   });

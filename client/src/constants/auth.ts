@@ -14,6 +14,7 @@ export const AUTH_ROUTES = {
 export const AUTH_API_ENDPOINTS = {
   SIGN_IN: {
     CREDENTIALS: "/auth/login",
+    CREDENTIALS_WITH_TOKEN: "/auth/login-with-email-verification-token",
   },
   REFRESH: "/auth/refresh",
 };

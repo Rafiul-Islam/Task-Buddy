@@ -15,12 +15,19 @@ import {toast} from "react-toastify";
 import Image from "next/image";
 import Link from "next/link";
 import {AUTH_ROUTES} from "@/constants/auth";
+import {useSearchParams} from "next/navigation";
+import {httpClient} from "@/lib/http-client";
+import {ApiResponse} from "@/types/auth";
 
 type LoginFormData = z.infer<typeof signinSchema>;
 
 const SigninPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const params = useSearchParams();
+  const token = params.get("email-verification-token") || "";
+
   const form = useForm<LoginFormData>({
     resolver: zodResolver(signinSchema),
     mode: "onSubmit",
@@ -31,9 +38,15 @@ const SigninPage = () => {
     },
   });
 
-  const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = async (formData: LoginFormData) => {
     setIsLoading(true);
-    doCredentialLogin({ data })
+    doCredentialLogin({
+      data: {
+        email: formData.email,
+        password: formData.password,
+        token,
+      }
+    })
     .then((result) => {
       if (result.error) {
         toast.error(result.error);
@@ -51,7 +64,7 @@ const SigninPage = () => {
   return (
     <div
       className="min-h-screen flex items-center justify-center p-3"
-      style={{ backgroundColor: "#eef2f6" }}
+      style={{backgroundColor: "#eef2f6"}}
     >
       <div className="w-full max-w-lg">
         {/* Logo Section */}
@@ -66,7 +79,8 @@ const SigninPage = () => {
         </div>
 
         {/* Login Card */}
-        <Card className="sm:px-4 py-15 border-0 bg-white sm:shadow-[0px_2px_1px_-1px_rgba(0,0,0,0.2),0px_1px_1px_0px_rgba(0,0,0,0.14),0px_1px_3px_0px_rgba(0,0,0,0.12)]">
+        <Card
+          className="sm:px-4 py-15 border-0 bg-white sm:shadow-[0px_2px_1px_-1px_rgba(0,0,0,0.2),0px_1px_1px_0px_rgba(0,0,0,0.14),0px_1px_3px_0px_rgba(0,0,0,0.12)]">
           <CardHeader className="space-y-1 pb-6">
             <CardTitle className="text-2xl font-semibold text-center text-gray-800">
               Sign In
@@ -84,16 +98,16 @@ const SigninPage = () => {
                 className="space-y-6"
               >
                 {/* Hidden dummy fields to prevent autofill */}
-                <input type="text" style={{ display: 'none' }} autoComplete="username" />
-                <input type="password" style={{ display: 'none' }} autoComplete="current-password" />
+                <input type="text" style={{display: 'none'}} autoComplete="username"/>
+                <input type="password" style={{display: 'none'}} autoComplete="current-password"/>
                 {/* Email Field */}
                 <FormField
                   control={form.control}
                   name="email"
-                  render={({ field }) => (
+                  render={({field}) => (
                     <FormItem>
                       <FormLabel className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                        <Mail className="w-4 h-4" />
+                        <Mail className="w-4 h-4"/>
                         Email Address
                       </FormLabel>
                       <FormControl>
@@ -105,7 +119,7 @@ const SigninPage = () => {
                           {...field}
                         />
                       </FormControl>
-                      <FormMessage className="text-red-500 text-sm" />
+                      <FormMessage className="text-red-500 text-sm"/>
                     </FormItem>
                   )}
                 />
@@ -114,10 +128,10 @@ const SigninPage = () => {
                 <FormField
                   control={form.control}
                   name="password"
-                  render={({ field, fieldState }) => (
+                  render={({field, fieldState}) => (
                     <FormItem>
                       <FormLabel className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                        <Lock className="w-4 h-4" />
+                        <Lock className="w-4 h-4"/>
                         Password
                       </FormLabel>
                       <FormControl>
@@ -141,21 +155,22 @@ const SigninPage = () => {
                             onClick={() => setShowPassword(!showPassword)}
                           >
                             {showPassword ? (
-                              <EyeOff className="w-4 h-4 text-gray-500" />
+                              <EyeOff className="w-4 h-4 text-gray-500"/>
                             ) : (
-                              <Eye className="w-4 h-4 text-gray-500" />
+                              <Eye className="w-4 h-4 text-gray-500"/>
                             )}
                           </Button>
                         </div>
                       </FormControl>
-                      <FormMessage className="text-red-500 text-sm" />
+                      <FormMessage className="text-red-500 text-sm"/>
                     </FormItem>
                   )}
                 />
 
                 <div>
-                  <Link className="block text-green-600 hover:text-green-800 italic text-sm text-right" href="/forgot-password">
-                      Forgot Password
+                  <Link className="block text-green-600 hover:text-green-800 italic text-sm text-right"
+                        href="/forgot-password">
+                    Forgot Password
                   </Link>
                 </div>
 
@@ -167,12 +182,12 @@ const SigninPage = () => {
                 >
                   {isLoading ? (
                     <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"/>
                       Signing in...
                     </div>
                   ) : (
                     <div className="flex items-center gap-2">
-                      <LogIn className="w-4 h-4" />
+                      <LogIn className="w-4 h-4"/>
                       Sign In
                     </div>
                   )}
@@ -183,7 +198,7 @@ const SigninPage = () => {
                     href={AUTH_ROUTES.SIGN_UP}
                     className="inline-flex items-center gap-1 text-green-600 hover:text-green-700 font-medium"
                   >
-                    <UserPlus2 className="w-4 h-4" />
+                    <UserPlus2 className="w-4 h-4"/>
                     Create Account
                   </Link>
                 </div>

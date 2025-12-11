@@ -1,6 +1,7 @@
 export interface Credential {
   email: string;
   password: string;
+  token?: string;
 }
 
 export interface CustomUser {
