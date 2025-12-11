@@ -62,9 +62,9 @@ public class AuthService {
     return frontendUrl + "/signin?email-verification-token=" + token;
   }
 
-  private void sendResetPasswordEmail(String email, String token) {
+  private void sendResetPasswordEmail(String fullname, String email, String token) {
     try {
-      passwordResetEmailService.sendPasswordResetEmail(email, "TaskBuddy", generateResetPasswordLink(token));
+      passwordResetEmailService.sendPasswordResetEmail(email, fullname, generateResetPasswordLink(token));
       log.info("Password reset email sent to {}", email);
     } catch (Exception e) {
       log.error("Failed to send reset password email", e);
@@ -72,9 +72,9 @@ public class AuthService {
     }
   }
 
-  private void sendSignupUserVerificationEmail(String email, String token) {
+  private void sendSignupUserVerificationEmail(String fullname, String email, String token) {
     try {
-      signupEmailService.sendSignupUserVerificationEmail(email, "TaskBuddy", generateSignupUserVerificationLink(token));
+      signupEmailService.sendSignupUserVerificationEmail(email, fullname, generateSignupUserVerificationLink(token));
       log.info("Signup user verification email sent to {}", email);
     } catch (Exception e) {
       log.error("Failed to send signup user verification email", e);
@@ -159,7 +159,7 @@ public class AuthService {
     log.info("Signup user verification record created for {}", email);
 
     // 4. Send email
-    sendSignupUserVerificationEmail(email, token);
+    sendSignupUserVerificationEmail(request.getFullname(), email, token);
 
     userService.save(request);
     log.info("User ({}) registration successful", email);
@@ -267,7 +267,7 @@ public class AuthService {
     log.info("New reset password record created for {}", email);
 
     // 4. Send email
-    sendResetPasswordEmail(email, token);
+    sendResetPasswordEmail(user.get().getFullname(), email, token);
   }
 
   @Transactional
